@@ -1,36 +1,38 @@
 import { ApolloServer, gql } from 'apollo-server-express';
-import typeDefs from './data/schema';
 import resolvers from './data/resolvers';
+import typeDefs from './data/schema';
 import db from './models';
-const jwt = require('express-jwt');
+import security from './util/Security';
+var cookieParser = require('cookie-parser')
 
+const jwt = require('express-jwt');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 
-app.use('/graphql', bodyParser.json(), jwt({
-    secret: process.env.JWT_SECRET,
-    credentialsRequired: false,
-}));
+app.use(cookieParser());
+app.use('/graphql', bodyParser.json(), security());
 
 const server = new ApolloServer({
-    typeDefs: gql(typeDefs),
-    resolvers,
-    context: async ({req}) => { 
-      //const data = await someStuff(); 
-      return {
-        authUser: req.user,
-        db
-      } 
-  }});
- 
-
-
+  typeDefs: gql(typeDefs),
+  resolvers,
+  playground: {
+    settings: {
+      "request.credentials": "same-origin"
+    }
+  },
+  context: async ({req}) => { 
+    //const data = await someStuff(); 
+    return {
+      authUser: req.user,
+      db
+    } 
+}});
 server.applyMiddleware({ app });
 
 app.use(express.static(path.join(__dirname, 'build')));
-app.use(bodyParser.json());
+/*app.use(bodyParser.json());
 app.get('/api/getRequest', (req, res) => {
  //API logic
  });
@@ -41,7 +43,8 @@ app.post('/api/postRequest', (req, res) => {
 
 app.get('*', (req,res) => {
  res.sendFile(path.join(__dirname, 'build/index.html'));
-});
+});*/
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
  //console.log('Listening on port', port);

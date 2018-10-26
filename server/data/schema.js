@@ -1,3 +1,4 @@
+
 // Define our schema using the GraphQL schema language
 const typeDefs = `
     scalar DateTime
