@@ -9,7 +9,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Cookies from 'universal-cookie';
-import Router from 'next/router'
 const uuid = require('uuid/v4'); // ES5
 
 import { ApolloClient } from 'apollo-client';
@@ -17,7 +16,6 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 import fetch from 'node-fetch';
-import Link from 'next/link';
 
 const client = new ApolloClient({
     ssrMode: true,
@@ -27,14 +25,6 @@ const client = new ApolloClient({
     }),
     cache: new InMemoryCache(),
 });
-const loginMutation =gql`mutation login(
-    $email: String!, 
-    $password:String!){
-        login(
-            email: $email, 
-            password:$password 
-        )
-    }`
 
 const styles = theme => ({
   layout: {
@@ -66,12 +56,6 @@ const styles = theme => ({
   submit: {
     marginTop: theme.spacing.unit * 3,
   },
-  smallLink:
-            {...theme.typography.body2,
-            ...{'color': theme.palette.primary.light,
-            float: 'right',
-            marginTop: theme.spacing.unit,
-            textDecoration:'none'}}
 });
  
 class SignIn extends Component{
@@ -103,23 +87,19 @@ class SignIn extends Component{
         const cookies = new Cookies();
         var cookie = cookies.get('ClientId') || uuid()
         cookies.set('ClientId', cookie, {expires: new Date(2050,1,1)})
-        client.mutate({
-                mutation:loginMutation,
-                variables:{
-                    email: this.state.email,
-                    password: this.state.password
-                }
+        console.log()
+        client.query({
+                query: gql([
+                'query{',
+                    'allUsers{',
+                        'firstName',
+                     '}',
+                '}'].join('')
+                ),
             })
             .then(result => {
-                this.setState({error: ''})
-                Router.push(`/`)
-            })
-            .catch((err) => {
-                if (err.graphQLErrors)
-                    this.setState({error: err.graphQLErrors[0].message})
-                else 
-                    this.setState('Sorry, something went wrong terribly wrong')
-            })
+                this.setState({error: 'Onbekende combinatie'})
+            });
       }
     render(){
         const { classes } = this.props;
@@ -154,11 +134,7 @@ class SignIn extends Component{
                     helperText = {this.state.error}
                     error = {this.state.error!=''}
                     />
-                    {this.state.error!='' ? 
-                        <Link href="/ResetPassword"  >
-                            <a className={classes.smallLink}>Forgot password? Reset</a>
-                        </Link> : null 
-                    }
+                  
                   <Button
                     type="submit"
                     fullWidth
@@ -166,14 +142,10 @@ class SignIn extends Component{
                     disabled={!this.validateForm()}
                     color="primary"
                     className={classes.submit}
+                    onClick={()=>{console.log(this.state)}}
                   >
                     Sign in
                   </Button>
-                  <br/>
-                  <Link href="/Login" >
-                    <a className={classes.smallLink}>Not a member jet? Subscribe</a>
-                  </Link>
-                  
                 </form>
               </Paper>
             </main>

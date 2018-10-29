@@ -60,7 +60,7 @@ class Index extends React.Component {
           example project
         </Typography>
         <Typography gutterBottom>
-          <Link href="/SignIn">
+          <Link href="/Login">
             <a>Go to the SignIn page</a>
           </Link>
         </Typography>
