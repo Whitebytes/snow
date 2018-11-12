@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         id: {
             primaryKey: true,
             type: DataTypes.UUID,
-            defaultValue: uuid(),
+            defaultValue: DataTypes.UUIDV1,
             allowNull: false
         },
         firstName: {
@@ -23,6 +23,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         }
+    });
+    User.associate = function(models) {
+        // A user can have many post
+        User.hasMany(models.Token, {as: 'accessTokens', foreignKey:'userId'});
+    };
+    User.beforeCreate((user, _ ) => {
+        return user.id = uuid();
     });
    
     return User;

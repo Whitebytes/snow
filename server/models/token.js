@@ -1,7 +1,7 @@
 'use strict';
 const uuid = require('uuid/v4'); // ES5
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('Token', {
+    const Token = sequelize.define('Token', {
         id: {
             primaryKey: true,
             type: DataTypes.UUID,
@@ -17,9 +17,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     });
-    User.associate = function(models) {
-        // A user can have many post
-        User.hasMany(models.Token, {as: 'accessTokens', foreignKey:'userId'});
-    };
-    return User;
+    
+    return Token;
 };
