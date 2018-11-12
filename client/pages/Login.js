@@ -4,29 +4,17 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockIcon from '@material-ui/icons/LockOutlined';
+import LockIcon from '@material-ui/icons/LockOutlined'
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Cookies from 'universal-cookie';
 import Router from 'next/router'
-const uuid = require('uuid/v4'); // ES5
-
-import { ApolloClient } from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
-import fetch from 'node-fetch';
 import Link from 'next/link';
+import ApiClient  from '../modules/ApiClient.js';
+import Head from 'next/head'
 
-const client = new ApolloClient({
-    ssrMode: true,
-    link: new HttpLink({
-      uri: (typeof(window)!='undefined') ? window.location.origin + '/graphql' :'',
-      fetch,
-    }),
-    cache: new InMemoryCache(),
-});
+
 const loginMutation =gql`mutation login(
     $email: String!, 
     $password:String!){
@@ -35,6 +23,8 @@ const loginMutation =gql`mutation login(
             password:$password 
         )
     }`
+
+const client = new ApiClient();
 
 const styles = theme => ({
   layout: {
@@ -75,12 +65,7 @@ const styles = theme => ({
 });
  
 class SignIn extends Component{
-    static async getInitialProps({ req }) {
-        const baseURL = process.env.baseURL
-        const clientPort = parseInt(process.env.clientPort, 10) || 3001
-        return {baseURL, clientPort }
-      }
-
+   
     constructor(props) {
         super(props);
     
@@ -89,6 +74,8 @@ class SignIn extends Component{
           password: "",
           error:""
         };
+        this.applyNastyFix();
+      
       }
       handleChange = event => {
         this.setState({
@@ -98,11 +85,21 @@ class SignIn extends Component{
       validateForm() {
         return this.state.email.length > 0 && this.state.password.length > 0;
       }
+      applyNastyFix(){
+        //form playground credentials-bug:
+        if (typeof(localStorage)=='undefined')
+          return
+        var playground=localStorage.getItem('graphql-playground')
+        if (playground!=null){
+          var spaces = JSON.parse(playground)
+          var settings =JSON.parse(spaces.settingsString);
+          settings['request.credentials']='same-origin';
+          spaces.settingsString = JSON.stringify(settings);
+          localStorage.setItem('graphql-playground', JSON.stringify(spaces))
+        }
+      }
       handleSubmit = event => {
-        event.preventDefault();
-        const cookies = new Cookies();
-        var cookie = cookies.get('ClientId') || uuid()
-        cookies.set('ClientId', cookie, {expires: new Date(2050,1,1)})
+        event.preventDefault()
         client.mutate({
                 mutation:loginMutation,
                 variables:{
@@ -112,6 +109,7 @@ class SignIn extends Component{
             })
             .then(result => {
                 this.setState({error: ''})
+                localStorage.setItem('bearer', result.data.login)
                 Router.push(`/`)
             })
             .catch((err) => {
@@ -121,11 +119,13 @@ class SignIn extends Component{
                     this.setState('Sorry, something went wrong terribly wrong')
             })
       }
+   
     render(){
         const { classes } = this.props;
-        var result = (
+        var loginForm = (
           <React.Fragment>
             <CssBaseline />
+            <Head><title>Login</title></Head>
             <main className={classes.layout}>
               <Paper className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -179,7 +179,8 @@ class SignIn extends Component{
             </main>
           </React.Fragment>
         )
-        return result 
+
+        return loginForm
     }
 }
 

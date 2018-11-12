@@ -7,6 +7,12 @@ const env = process.env.NODE_ENV || 'development';
 var config    = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
+const addUser=`INSERT INTO 
+Users (id,firstName,lastName,email,password,createdAt,updatedAt)
+VALUES ('1223ff59-7a5e-4add-ab7c-981f5e3d2237','geertjan','kemme','gj@qemme.nl','$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2','2018-10-30 11:50:52','2018-10-30 11:50:52');`
+
+
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -20,7 +26,7 @@ fs
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
-    const model = sequelize['import'](path.join(__dirname, file));
+    const model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
 
@@ -36,5 +42,14 @@ db.sequelize
 .query('SET FOREIGN_KEY_CHECKS = 0', null).then(()=> {
   db.sequelize.sync({force: true});
 })
+/*db.sequelize.sync({force: true})
+  .then(()=>{db.sequelize.query(addUser)})*/
+
+  for (var n in sequelize.models){
+    var attr =sequelize.models[n].rawAttributes;
+    for (var m in attr){
+      console.log(attr[m].type.constructor.name)
+    }
+  }
 
 module.exports = db;
