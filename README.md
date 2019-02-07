@@ -1,3 +1,3 @@
 # snow
 
-[Docs are here](client/readme.md)
+[Docs are here](client/README.md)
