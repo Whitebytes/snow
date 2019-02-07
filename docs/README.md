@@ -1,4 +1,4 @@
 Stack overview
 ===
 
-![Stick overview](img/Stack.png)
+![Stack overview](img/Stack.png)
