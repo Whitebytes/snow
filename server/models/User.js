@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.Token, {as: 'accessTokens', foreignKey:'userId'});
     };
     User.beforeCreate((user, _ ) => {
-        return user.id = uuid();
+        return user.id = uuid(); 
     });
    
     return User;
