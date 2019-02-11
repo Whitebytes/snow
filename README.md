@@ -51,12 +51,12 @@ As a user:
 
 ### cloud connector
 
-![Stack overview](docs/img/pricing.xlsx)
+[Pricing](docs/img/pricing.xlsx)
 
 ### screen development
 
 ![Wireframes](client/docs/img/Wireframe.png)
 
-![Wireframes](client/docs/img/Login.png)
+![Loginscreen](client/docs/img/Login.png)
 
-![Wireframes](client/docs/img/MaterialUI.png)
+![materialUI](client/docs/img/MaterialUI.png)
