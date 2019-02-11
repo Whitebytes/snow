@@ -38,4 +38,4 @@ As a user:
 
 ## Setup environment
 
-![Stack overview](dosc/img/Stack.png)
+![Stack overview](docs/img/Stack.png)
