@@ -6,4 +6,4 @@
 
 ## ERD Sample
 
-[here](ERDTigerExample.html)
+[here](ERDTigerExample.jpg)

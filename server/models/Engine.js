@@ -2,38 +2,32 @@
 const uuid = require('uuid/v4'); // ES5
 
 module.exports = (sequelize, DataTypes) => {
-    const MediaIndex = sequelize.define('MediaIndex', {
+    const Engine = sequelize.define('Engine', {
         id: {
             primaryKey: true,
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV1,
             allowNull: false
         },
-        mediaRawId:{
-            type: DataTypes.UUID,
+    
+        name:{
+            type: DataTypes.STRING,
             allowNull: false
         },
-        engineId:{
+        userOwner:{
             type: DataTypes.UUID,
             allowNull: false
         },
         props:{
             type: DataTypes.JSON,
             allowNull: false
-        },
-        blobRef:{
-            type: DataTypes.STRING
         }
     });
-    MediaIndex.associate = function(models) {
+    Engine.associate = function(models) {
         // A user can have many post
-        MediaIndex.belongsTo(models.MediaRaw, {as: 'indexOf', foreignKey:'mediaRawId'});
+        Engine.belongsTo(models.User, {as: 'inventor', foreignKey:'userOwner'});
     };
-    MediaIndex.associate = function(models) {
-        // A user can have many post
-        MediaIndex.belongsTo(models.Engine, {as: 'generatedBy', foreignKey:'engineId'});
-    }; 
 
-    return MediaIndex;
+    return Engine;
 };
 /* Sample data*/
