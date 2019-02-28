@@ -1,7 +1,8 @@
 'use strict';
 const uuid = require('uuid/v4'); // ES5
 
-module.exports = (sequelize, DataTypes) => {
+
+const model = (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
         id: {
             primaryKey: true,
@@ -30,7 +31,9 @@ module.exports = (sequelize, DataTypes) => {
     };
     User.beforeCreate((user, _ ) => {
         return user.id = uuid(); 
-    });
-   
+    })
     return User;
-};
+}
+
+
+export default model;

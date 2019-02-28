@@ -1,8 +1,8 @@
 
-import db from '.././models';
+import db from '.';
 
 const model = (sequelize, DataTypes) => {
-    const MenuItem = sequelize.define('MenuItem', {
+    const Module = sequelize.define('Module', {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
@@ -13,17 +13,18 @@ const model = (sequelize, DataTypes) => {
             allowNull: false
         },
         icon: {
-            type: DataTypes.STRING(500),
+            type: DataTypes.TEXT,
             allowNull: false
         }
     });
-    MenuItem.associate = function(models) {
+    Module.associate = function(models) {
         // A user can have many post
-        MenuItem.hasMany(models.MenuItem, {as: 'subMenus', foreignKey:'parentId'});
-        MenuItem.belongsTo(models.Module, {as: 'module', foreignKey:'moduleId'});
+        Module.hasMany(models.MenuItem, {as: 'menuItems', foreignKey:'moduleId'});
+      
     };
-
-    return MenuItem;
+    return Module;
+    
 };
 export default model;
+
  

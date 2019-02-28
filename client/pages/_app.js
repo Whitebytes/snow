@@ -4,6 +4,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../src/getPageContext';
+import { Provider } from "react-redux";
+import store from "../redux/store";
 
 class MyApp extends App {
   constructor(props) {
@@ -22,6 +24,8 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
+
+      <Provider store={store}>
       <Container>
         {/* Wrap every page in Jss and Theme providers */}
         <JssProvider
@@ -42,6 +46,7 @@ class MyApp extends App {
           </MuiThemeProvider>
         </JssProvider>
       </Container>
+      </Provider>
     );
   }
 }

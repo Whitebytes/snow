@@ -4,6 +4,7 @@ import typeDefs from './data/schema';
 import db from './models';
 import security from './util/Security';
 
+
 var cookieParser = require('cookie-parser')
 
 const jwt = require('express-jwt');
@@ -11,6 +12,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
+
 
 app.use(cookieParser());
 app.use('/graphql', 
@@ -38,7 +40,11 @@ const server = new ApolloServer({
       db
     } 
 }});
-server.applyMiddleware({ app });
+server.applyMiddleware({ app })
+
+
+//load initial data into database
+
 
 app.use(express.static(path.join(__dirname, 'build')));
 /*app.use(bodyParser.json());
@@ -58,5 +64,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
  //console.log('Listening on port', port);
  console.log(` Server ready at http://localhost:${port}${server.graphqlPath}`)
-});  
+});
 

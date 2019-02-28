@@ -1,0 +1,15 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "Snow",
+        "Group": "FieldMedia",
+        "Port": 5432,
+        "Username": "snow",
+        "Host": "db",
+        "SSLMode": "prefer",
+        "MaintenanceDB": "postgres"
+      }
+    }
+  }
+  
+  

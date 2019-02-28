@@ -34,12 +34,12 @@ class Security{
         if (!valid) {
             throw new Error('Incorrect password');
         }
-        var token = await jwt.sign({
+        user.token = await jwt.sign({
             id: user.id,
             email: user.email
         }, process.env.JWT_SECRET, { expiresIn: '1y' });
-        res.cookie('Authorization','Bearer '+token, { maxAge: 900000, httpOnly: true})
-        return token;
+        res.cookie('Authorization','Bearer '+user.token , { maxAge: 900000, httpOnly: true})
+        return user;
     }
 
     static async logout(res){

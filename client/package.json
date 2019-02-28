@@ -19,6 +19,7 @@
     "react-apollo": "^2.2.4",
     "react-dom": "latest",
     "react-jss": "latest",
+    "react-redux": "^6.0.1",
     "resolve-url": "^0.2.1",
     "universal-cookie": "^3.0.4"
   },

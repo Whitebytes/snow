@@ -14,9 +14,15 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from '../modules/components/ListItems';
-import SimpleLineChart from '../modules/components/SimpleLineChart';
-import SimpleTable from '../modules/components/SimpleTable';
+
+import SimpleLineChart from './SimpleLineChart';
+import SimpleTable from './SimpleTable';
+import ModuleMenu from './ModuleMenu';
+import MenuLoader from '../MenuLoader'
+
+import apiClient from "../ApiClient"
+import { connect } from "react-redux";
+import { toggleDrawer } from "../../redux/actions";
 
 const drawerWidth = 240;
 
@@ -97,38 +103,28 @@ const styles = theme => ({
   },
 });
 
+const MenuLoaderWithApiClient = props => <MenuLoader apiClient={apiClient} {...props}/>
+
 class AppFrame extends React.Component {
-  state = {
-    open: true,
-  };
-
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
 
   render() {
-    const { classes } = this.props;
-
+    const { classes, drawerOpen } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
         <div className={classes.root}>
           <AppBar
             position="absolute"
-            className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
+            className={classNames(classes.appBar, drawerOpen && classes.appBarShift)}
           >
-            <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
+            <Toolbar disableGutters={!drawerOpen} className={classes.toolbar}>
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
+                onClick={this.props.toggleDrawer}
                 className={classNames(
                   classes.menuButton,
-                  this.state.open && classes.menuButtonHidden,
+                  drawerOpen && classes.menuButtonHidden,
                 )}
               >
                 <MenuIcon />
@@ -152,19 +148,20 @@ class AppFrame extends React.Component {
           <Drawer
             variant="permanent"
             classes={{
-              paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+              paper: classNames(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose),
             }}
-            open={this.state.open}
+            open={drawerOpen}
           >
             <div className={classes.toolbarIcon}>
-              <IconButton onClick={this.handleDrawerClose}>
+              <IconButton onClick={this.props.toggleDrawer}>
                 <ChevronLeftIcon />
               </IconButton>
             </div>
             <Divider />
-            <List>{mainListItems}</List>
+            <List>
+              <MenuLoaderWithApiClient>{({modules})=><ModuleMenu modules={modules}/>}</MenuLoaderWithApiClient></List>
             <Divider />
-            <List>{secondaryListItems}</List>
+          
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
@@ -191,4 +188,11 @@ AppFrame.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AppFrame);
+const mapStateToProps = state => {
+  return { drawerOpen:state.drawer.open };
+};
+
+export default connect(
+  mapStateToProps,
+  { toggleDrawer }
+)(withStyles(styles)(AppFrame));

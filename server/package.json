@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --exec babel-node server.js"
+    "server": "nodemon --exec babel-node server.js",
+    "docker:up": "docker-compose up -d",
+    "docker:stop": "docker-compose stop",
+    "docker:down": "docker-compose down"
   },
   "keywords": [],
   "author": "",

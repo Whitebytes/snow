@@ -109,7 +109,7 @@ class SignIn extends Component{
             })
             .then(result => {
                 this.setState({error: ''})
-                localStorage.setItem('bearer', result.data.login)
+                localStorage.setItem('bearer', result.data.login.token)
                 Router.push(`/`)
             })
             .catch((err) => {

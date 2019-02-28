@@ -1,7 +1,7 @@
 'use strict';
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const { User, Post, Tag } = require('../models');
+const { User, Module, MenuItem} = require('../models');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 
@@ -23,10 +23,22 @@ const resolvers = {
         async allUsers(_,{ctx}) {
             return await User.all();
         },
+        async queryUsers(_,{clause}) {
+            return await User.findAll({where: JSON.parse(clause)})
+        },
         // Get a user by it ID
         async fetchUser(_,{ id},{authUser} ) {
             return await User.findById(id);
-        }
+        },
+        async modules(_,{ id},{authUser} ) {
+            console.log({authUser})
+            return await Module.findAll({
+                include: [{// Notice `include` takes an ARRAY
+                    all: true, 
+                    nested: true
+                }]
+              })
+        },
     },
     Mutation: {
         // Handles user login

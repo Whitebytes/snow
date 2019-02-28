@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
 
+
+
 class MyDocument extends Document {
   render() {
     const { pageContext } = this.props;
 
     return (
+     
       <html lang="en" dir="ltr">
+      
         <Head>
    
           <meta charSet="utf-8" />
@@ -18,17 +22,20 @@ class MyDocument extends Document {
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
           />
           {/* PWA primary color */}
-          <meta name="theme-color" content={pageContext.theme.palette.primary.main} />
+          <meta name="theme-color" content={pageContext? pageContext.theme.palette.primary.main : ''} />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
           />
         </Head>
         <body>
-          <Main />
+       
+           <Main />
+          
           <NextScript />
         </body>
       </html>
+ 
     );
   }
 }
@@ -71,6 +78,11 @@ MyDocument.getInitialProps = ctx => {
     return WrappedComponent;
   });
 
+  if (!pageContext)
+    return {
+      ...page,
+      pageContext
+    };
   return {
     ...page,
     pageContext,
