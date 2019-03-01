@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Router from 'next/router'
 import gql from "graphql-tag";
-import ApiClient  from '../modules/ApiClient.js';
+import ApiClient  from '../../modules/ApiClient.js';
 
 
 const logoffMutation =gql`mutation a{logout }`

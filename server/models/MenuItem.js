@@ -12,8 +12,12 @@ const model = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        url: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         icon: {
-            type: DataTypes.STRING(500),
+            type: DataTypes.TEXT,
             allowNull: false
         }
     });

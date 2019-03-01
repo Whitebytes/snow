@@ -5,7 +5,7 @@ import {loadingStates} from "../redux/states";
 
 import gql from "graphql-tag";
 import { menu_load, menu_loaded } from "../redux/actions";
-const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon}}}`
+const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon, url}}}`
 
 class MenuLoader extends Component{
     componentDidMount(){

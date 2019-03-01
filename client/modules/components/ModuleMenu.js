@@ -13,6 +13,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { connect } from "react-redux";
 import router from 'next/router';
 
+import Link from "next/link"; 
+
 const styles = theme => ({
     root: {
       width: '100%',  
@@ -73,13 +75,19 @@ class ModuleMenu extends Component{
               
                     {
                         item.menuItems.map((item) =>{
-                            return  (
-                            <ListItem button key={item.name} onClick={this.menuClick}>
+                            return   <ListItem button key={item.name} >
                             <ListItemIcon>
                                 <ModuleIcon path={item.icon} />
                             </ListItemIcon>
-                            <ListItemText primary={item.name}/>
-                            </ListItem>);
+                            {item.url.startsWith('http') ? 
+                            <a href={item.url} target="_blank">
+                              <ListItemText primary={item.name} />
+                              </a>
+                              :
+                              <Link href={item.url}>
+                              <ListItemText primary={item.name} />
+                              </Link>}
+                            </ListItem>;
                         })
 
                     }

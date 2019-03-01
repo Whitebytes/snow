@@ -11,7 +11,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Router from 'next/router'
 import gql from "graphql-tag";
 import Link from 'next/link';
-import ApiClient  from '../modules/ApiClient.js';
+import ApiClient  from '../../modules/ApiClient.js';
 import Head from 'next/head'
 
 

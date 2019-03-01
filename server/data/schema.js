@@ -13,6 +13,7 @@ const typeDefs = `
     type MenuItem {
         id: Int!
         name: String!
+        url: String!
         icon: String!
         parentId: Int!
         createdAt: DateTime! # will be generated
