@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
-
-
+import { moduleClick } from "../redux/actions"
 
 class MyDocument extends Document {
   render() {
@@ -27,6 +26,7 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
           />
+        <link rel='stylesheet' type='text/css' href='/static/nprogress.css' />
         </Head>
         <body>
        
@@ -65,6 +65,8 @@ MyDocument.getInitialProps = ctx => {
 
   // Render app and page and get the context of the page with collected side effects.
   let pageContext;
+  ctx.reduxStore.dispatch(moduleClick('Administrate'));
+
   const page = ctx.renderPage(Component => {
     const WrappedComponent = props => {
       pageContext = props.pageContext;
@@ -86,6 +88,7 @@ MyDocument.getInitialProps = ctx => {
   return {
     ...page,
     pageContext,
+    
     // Styles fragment is rendered after the app and page rendering finish.
     styles: (
       <React.Fragment>

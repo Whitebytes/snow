@@ -12,8 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { connect } from "react-redux";
 import router from 'next/router';
-
 import Link from "next/link"; 
+import { menuClick, moduleClick } from "../../redux/actions";
 
 const styles = theme => ({
     root: {
@@ -24,47 +24,35 @@ const styles = theme => ({
       flexBasis: '33.33%',
       flexShrink: 0,
     },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
-    },
     details :{
         padding:0,
         display:'block'
     },
     active:{
-      'background-color':'#9c27b021'
+      'background-color':theme.palette.action.selected
     }
   });
   
   
 class ModuleMenu extends Component{
-   
-    state = {
-      expanded: null,
-    };
-    
-    handleChange = panel => (event, expanded) => {
-      this.setState({
-        expanded: expanded ? panel : false,
-      });
-    };
+  
     menuClick = (item)=>{
-      router.push('/media/Upload');
-
+      this.props.menuClick(item.name)
+      router.push(item.url);
+     
     }
 
     render() {
-        const { classes, drawerOpen } = this.props;
-        const { expanded } = this.state;
+        const { classes, moduleClick,selectedModule } = this.props;
 
         return  (<div className={classes.root}>
             {this.props.modules.map((item)=>{
-              let currActive = expanded === item.name;
+            const { classes, drawerOpen, moduleClick,selectedModule } = this.props;
+            let currActive = selectedModule === item.name;
           return  <ExpansionPanel key={item.name} 
-            expanded={currActive}
-              onChange={this.handleChange(item.name)}>
-              <ExpansionPanelSummary className={currActive?classes.active :''} expandIcon={<ExpandMoreIcon />}>
+              expanded={currActive}
+              onChange={ ()=> moduleClick(item.name)}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <ListItemIcon>
                         <ModuleIcon path={item.icon} />
                     </ListItemIcon>
@@ -72,25 +60,27 @@ class ModuleMenu extends Component{
                 <Typography className={classes.heading}>{item.name}</Typography> :''}
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.details}>
-              
-                    {
-                        item.menuItems.map((item) =>{
-                            return   <ListItem button key={item.name} >
-                            <ListItemIcon>
-                                <ModuleIcon path={item.icon} />
-                            </ListItemIcon>
-                            {item.url.startsWith('http') ? 
-                            <a href={item.url} target="_blank">
-                              <ListItemText primary={item.name} />
-                              </a>
-                              :
-                              <Link href={item.url}>
-                              <ListItemText primary={item.name} />
-                              </Link>}
-                            </ListItem>;
-                        })
-
-                    }
+                {
+                  item.menuItems.map((item) =>{
+                      let mnuActive = item.name==this.props.selectedMenu;
+                     
+                      return   <ListItem button key={item.name} className={mnuActive?classes.active :''}
+                      onClick={() => this.menuClick(item)}
+                         >
+                      <ListItemIcon>
+                          <ModuleIcon path={item.icon} />
+                      </ListItemIcon>
+                      {item.url.startsWith('http') ? 
+                      <a href={item.url} target="_blank">
+                        <ListItemText primary={item.name} />
+                        </a>
+                        :
+                        <Link href={item.url}>
+                        <ListItemText primary={item.name} />
+                        </Link>}
+                      </ListItem>;
+                  })
+                }
              
               </ExpansionPanelDetails>
             </ExpansionPanel>
@@ -101,8 +91,14 @@ class ModuleMenu extends Component{
   
 }
 const mapStateToProps = state => {
-    return { drawerOpen:state.drawer.open };
+    return { 
+      drawerOpen:state.menu.drawerOpen,
+      selectedMenu: state.menu.selectedMenu,
+      selectedModule: state.menu.selectedModule
+    };
 };
 
-const toExp = connect(mapStateToProps,null)(withStyles(styles)(ModuleMenu));
+const toExp = connect(mapStateToProps,
+  {menuClick, moduleClick}
+  )(withStyles(styles)(ModuleMenu));
 export default toExp;

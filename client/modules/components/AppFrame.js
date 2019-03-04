@@ -14,9 +14,13 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import HomeIcon from '@material-ui/icons/Home';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Router from "next/router"; 
+import Fab from '@material-ui/core/Fab';
 
-import SimpleLineChart from './SimpleLineChart';
-import SimpleTable from './SimpleTable';
 import ModuleMenu from './ModuleMenu';
 import MenuLoader from '../MenuLoader'
 
@@ -36,9 +40,14 @@ const styles = theme => ({
   toolbarIcon: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
+    padding: '0 8px 0 0px',
     ...theme.mixins.toolbar,
+  },
+  drawerIn:{
+    flex:5
+  },
+  homeButton:{
+    margin: '0 0 0 10px'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -92,6 +101,11 @@ const styles = theme => ({
     height: '100vh',
     overflow: 'auto',
   },
+  removeBorder:{
+    padding: 0,
+    'padding-top': 64,
+
+  },
   chartContainer: {
     marginLeft: -22,
   },
@@ -108,7 +122,8 @@ const MenuLoaderWithApiClient = props => <MenuLoader apiClient={apiClient} {...p
 class AppFrame extends React.Component {
 
   render() {
-    const { classes, drawerOpen } = this.props;
+    const { classes, drawerOpen, toggleDrawer, title } = this.props;
+    console.log(drawerOpen)
     return (
       <React.Fragment>
         <CssBaseline />
@@ -121,7 +136,7 @@ class AppFrame extends React.Component {
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.props.toggleDrawer}
+                onClick={toggleDrawer}
                 className={classNames(
                   classes.menuButton,
                   drawerOpen && classes.menuButtonHidden,
@@ -136,7 +151,7 @@ class AppFrame extends React.Component {
                 noWrap
                 className={classes.title}
               >
-                Dashboard
+                {title}
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
@@ -153,9 +168,16 @@ class AppFrame extends React.Component {
             open={drawerOpen}
           >
             <div className={classes.toolbarIcon}>
-              <IconButton onClick={this.props.toggleDrawer}>
+
+
+            <Fab aria-label="Delete" color="secondary"  className={classes.homeButton}
+            onClick={()=>{Router.push('/')}} >
+              <HomeIcon />
+            </Fab>
+           <div className={classes.drawerIn}></div>
+              <IconButton onClick={toggleDrawer} >
                 <ChevronLeftIcon />
-              </IconButton>
+                </IconButton>
             </div>
             <Divider />
             <List>
@@ -163,20 +185,9 @@ class AppFrame extends React.Component {
             <Divider />
           
           </Drawer>
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Typography variant="h4" gutterBottom component="h2">
-              Orders
-            </Typography>
-            <Typography component="div" className={classes.chartContainer}>
-              <SimpleLineChart />
-            </Typography>
-            <Typography variant="h4" gutterBottom component="h2">
-              Products
-            </Typography>
-            <div className={classes.tableContainer}>
-              <SimpleTable />
-            </div>
+          <main className={classNames(classes.content, this.props.noBorder? classes.removeBorder:'')}>
+          {this.props.noBorder ? '': <div className={classes.appBarSpacer} />}
+              {this.props.children}
           </main>
         </div>
       </React.Fragment>
@@ -189,7 +200,7 @@ AppFrame.propTypes = {
 };
 
 const mapStateToProps = state => {
-  return { drawerOpen:state.drawer.open };
+  return { drawerOpen:state.menu.drawerOpen, title: state.menu.selectedMenu };
 };
 
 export default connect(

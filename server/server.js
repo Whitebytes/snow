@@ -32,7 +32,6 @@ const server = new ApolloServer({
     }
   },
   context: async ({req, res}) => { 
-    console.log(req.user)
     return {
       authUser: req.user,
       req, 

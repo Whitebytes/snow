@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {loadingStates} from "../redux/states"; 
 
 import gql from "graphql-tag";
-import { menu_load, menu_loaded } from "../redux/actions";
+import { menu_load, menu_loaded, moduleClick, menuClick } from "../redux/actions";
 const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon, url}}}`
 
 class MenuLoader extends Component{
@@ -15,11 +15,21 @@ class MenuLoader extends Component{
             
             apiClient
                 .query({query: moduleList}) 
-                .then( (rest) => {
+                .then((rest) => {
                     this.props.menu_loaded(rest.data.modules);
+                    rest.data.modules.map((module)=>{
+                        module.menuItems.map((item)=>{
+                            if (item.url==window.location.pathname){
+                                this.props.menu_loaded(rest.data.modules)
+                                this.props.moduleClick(module.name);
+                                this.props.menuClick(item.name);
+                                console.log(item.name)
+                            
+                            }
+                        })
+                    })
             }) 
         } 
-
     }
 
     render() {  
@@ -37,5 +47,5 @@ const mapStateToProps = state => {
   
 export default connect(
     mapStateToProps,
-    {  menu_load, menu_loaded }
+    {  menu_load, menu_loaded, menuClick, moduleClick }
   )(MenuLoader);

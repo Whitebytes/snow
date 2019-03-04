@@ -46,7 +46,21 @@ seeder.apply = async (db)=>{
           name: 'Media',
           icon: 'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z'
         });
-  
+        await db.MenuItem.create({
+          id: mnuId++,
+          name: 'Browse media',
+          url: '/media',
+          moduleId: 2,
+          icon: 'M10.59 4.59C10.21 4.21 9.7 4 9.17 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-1.41-1.41z'
+        });
+        await db.MenuItem.create({
+          id: mnuId++,
+          name: 'Geo media',
+          url: '/media/ByGeoLoc',
+          moduleId: 2,
+          icon: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'
+        });
+
         await db.MenuItem.create({
           id: mnuId++,
           name: 'Upload media',
@@ -55,13 +69,8 @@ seeder.apply = async (db)=>{
           icon: 'M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l4.65-4.65c.2-.2.51-.2.71 0L17 13h-3z'
         });
         
-        await db.MenuItem.create({
-            id: mnuId++,
-            name: 'Browse media',
-            url: '/media/Browse',
-            moduleId: 2,
-            icon: 'M10.59 4.59C10.21 4.21 9.7 4 9.17 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-1.41-1.41z'
-          });
+
+      
    
           await db.MenuItem.create({
             id: mnuId++,
