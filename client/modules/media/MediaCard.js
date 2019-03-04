@@ -73,7 +73,7 @@ class MediaCard extends React.Component {
         />
         <CardMedia
           className={classes.media}
-          image={'https://picsum.photos/200/300/?random&k='+this.props.imgId}
+          image={''+this.props.url}
           title="Paella dish"
         />
         <CardContent>

@@ -2,7 +2,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 import defaultProps from 'recompose/defaultProps';
 import { withStyles } from '@material-ui/core/styles';
-import { Motion } from 'react-motion';
+import Link  from 'next/link';
 import { clusterMarkerHOC } from './ClusterMarker.js';
 
 
@@ -16,33 +16,23 @@ const styles = theme => ({
    'transform-origin': '24px 64px',
    'margin': 0,
    'padding': 0
+  },
+  image:{
+    'max-width': 50,
+    'max-height': 100
   }
 });
 
 export const simpleMarker = ({
-  classes,
-  defaultMotionStyle, motionStyle, url
-}) => (
-  <Motion
-    defaultStyle={defaultMotionStyle}
-    style={motionStyle}
-  >
-  {
-    ({ scale }) => {
-       return (
-      <div
-        className={classes.marker}
-        style={{
-          transform: `translate3D(0,0,0) scale(${scale}, ${scale})`,
-          backgroundImage:url
-        }}
-      >
-      <img src={url} />
-      </div>
-    )}
-  }
-  </Motion>
-);
+  classes, url
+}) =>(
+    <div
+      className={classes.marker}
+    >
+    <Link href={'/media?url='+encodeURIComponent(url)}>
+      <img src={url} className={classes.image} /></Link>
+    </div>
+)
 
 export const simpleMarkerHOC = compose(
   defaultProps({

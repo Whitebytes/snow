@@ -23,8 +23,6 @@ class MenuLoader extends Component{
                                 this.props.menu_loaded(rest.data.modules)
                                 this.props.moduleClick(module.name);
                                 this.props.menuClick(item.name);
-                                console.log(item.name)
-                            
                             }
                         })
                     })

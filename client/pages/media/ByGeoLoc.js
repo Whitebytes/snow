@@ -3,10 +3,6 @@ import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import PropTypes from 'prop-types';
-import GoogleMap from 'google-map-react'
-
-import supercluster from 'points-cluster';
-import { susolvkaCoords, markersData } from '../../modules/media/fakeData';
 import GMap from '../../modules/media/GMap';
 
 
