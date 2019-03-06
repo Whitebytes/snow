@@ -3,7 +3,7 @@
 const typeDefs = `
     scalar DateTime
     type User {
-        id: Int!
+        id: ID!
         firstName: String!
         lastName: String
         email: String!
@@ -19,6 +19,17 @@ const typeDefs = `
         createdAt: DateTime! # will be generated
         updatedAt: DateTime! # will be generated
     }
+
+    type MediaRaw {
+        id:  ID!
+        name: String!
+        type: String!
+        connectorId: String!
+        blobRef: String!
+        userOwner: String!
+        props: String!
+    }
+
     type Module {
         id: Int!
         name: String!
@@ -28,6 +39,7 @@ const typeDefs = `
     type Query {
         allUsers: [User]
         queryUsers(clause: String!): [User]
+        queryMediaRaw(clause: String!): [MediaRaw]
         allMenuItems:[MenuItem]
         fetchUser(id: Int!): User
         modules:[Module]

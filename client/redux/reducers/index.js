@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
 import menu from "./menu";
+import mediaRaw from "./MediaRaw";
 
-export default combineReducers({ /*drawer,**/ menu});
+export default combineReducers({ mediaRaw,  menu});

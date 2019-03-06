@@ -22,7 +22,7 @@ import Router from "next/router";
 import Fab from '@material-ui/core/Fab';
 
 import ModuleMenu from './ModuleMenu';
-import MenuLoader from '../MenuLoader'
+import MenuLoader from '../../data/MenuLoader'
 
 import apiClient from "../ApiClient"
 import { connect } from "react-redux";

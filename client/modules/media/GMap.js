@@ -8,7 +8,7 @@ import GoogleMapReact from 'google-map-react';
 import ClusterMarker from './ClusterMarker';
 import SimpleMarker from './SimpleMarker';
 import supercluster from 'points-cluster';
-import { groningen, markersData } from './fakeData';
+const greatPlace = {lat: 52.6743317,lng:6.2571985};
 
 export const gMap = ({
   style, hoverDistance, options,
@@ -52,12 +52,7 @@ export const gMapHOC = compose(
       flex: 1,
     },
   }),
-  // withState so you could change markers if you want
-  withState(
-    'markers',
-    'setMarkers',
-    markersData
-  ),
+ 
   withState(
     'hoveredMarkerId',
     'setHoveredMarkerId',
@@ -67,7 +62,7 @@ export const gMapHOC = compose(
     'mapProps',
     'setMapProps',
     {
-      center: groningen,
+      center: greatPlace,
       zoom: 10,
     }
   ),
@@ -111,7 +106,7 @@ export const gMapHOC = compose(
             text: numPoints,
             numPoints,
             key:  `${numPoints}_${points[0].id}`,
-            url: points[0].url
+            url: points[0].blobRef
           }))
         : [],
     })

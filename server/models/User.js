@@ -32,6 +32,12 @@ const model = (sequelize, DataTypes) => {
     User.beforeCreate((user, _ ) => {
         return user.id = uuid(); 
     })
+    User.graphql = {
+        attributes: {
+            exclude: ['password'],
+            include: { namse: 'string', id: 'string' },
+        }
+    };
     return User;
 }
 

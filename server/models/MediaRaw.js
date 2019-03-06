@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         blobRef:{
-            type: DataTypes.STRING
+            type: DataTypes.STRING(250)
         },
         userOwner:{
             type: DataTypes.UUID,

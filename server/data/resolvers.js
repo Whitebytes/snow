@@ -1,7 +1,7 @@
 'use strict';
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const { User, Module, MenuItem} = require('../models');
+const { User, Module, MediaRaw} = require('../models');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
 
@@ -25,6 +25,17 @@ const resolvers = {
         },
         async queryUsers(_,{clause}) {
             return await User.findAll({where: JSON.parse(clause)})
+        },
+        async queryMediaRaw(_,{clause}) {
+            var data = await MediaRaw.findAll({where: JSON.parse(clause)}).map(item =>{
+                return {
+                    
+                    ...item.dataValues,
+                    props:JSON.stringify(item.props)
+                }
+            })
+            console.log(data)
+            return data;
         },
         // Get a user by it ID
         async fetchUser(_,{ id},{authUser} ) {

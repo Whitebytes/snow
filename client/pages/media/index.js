@@ -2,28 +2,44 @@
 import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import MediaCard from '../../modules/media/MediaCard';
+import MediaRaw from '../../data/MediaRaw';
+import apiClient from "../../modules/ApiClient"
+import { connect } from "react-redux";
+
+const MediaRawWithApiClient = props => <MediaRaw apiClient={apiClient} {...props}/>
 
 class index extends React.Component {
   static getInitialProps({query}) {
-    return {query}
+    return {query,data:[], ...this.props}
   }
 
   getItems = ()=>{
-    
     if (this.props.query.url)
-      return <MediaCard key={i} url={this.props.query.url}></MediaCard>
-    let result = [];
-    for (var i=0; i<20; i++){
-        result.push(<MediaCard key={i} url={'https://picsum.photos/200/300/?random&k='+i}></MediaCard>);
-    }
-    return result;
+      return <MediaCard  url={this.props.query.url}></MediaCard>
+
+    return this.props.data.splice(0,10).map((item)=>{
+      return (<MediaCard key={item.id} url={item.blobRef}></MediaCard>);
+    })
   }
   render() {
     return (
       <AppFrame>
-          {this.getItems()}
+        <MediaRawWithApiClient>
+         {this.getItems()}
+        </MediaRawWithApiClient>
+  
       </AppFrame>
     );
   }
 }
-export default index
+
+const mapStateToProps = state => {
+  return { 
+      loadState:state.mediaRaw.loadState, 
+      data:state.mediaRaw.records
+  };
+};
+
+export default connect(mapStateToProps,
+null
+)(index);
