@@ -16,11 +16,11 @@ class MenuRouter extends React.Component {
         const url = window.location.pathname
         
         modules.map((module)=>{
+            
             module.menuItems.map((item)=>{
-                if (item.url==url){
+                if (item.url===url){
                     this.props.moduleSelect(module.name);
                     this.props.menuSelect(item.name);
-                    console.log(url, item.name)
                 }
             })
         })
@@ -28,8 +28,9 @@ class MenuRouter extends React.Component {
     
     componentDidMount(){
         const {menuState, apiClient,  menu_load, menu_loaded} = this.props;
-        Router.events.on('routeChangeComplete', (url) => {
-            this.selectMenu(url)
+        
+        Router.events.on('routeChangeComplete', () => {
+            this.selectMenu()
         })
  
         if (menuState==loadingStates.UNLOADED){

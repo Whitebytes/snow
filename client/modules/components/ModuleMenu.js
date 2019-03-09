@@ -35,23 +35,26 @@ const styles = theme => ({
   
 class ModuleMenu extends Component{
   
-    menuClick = (item)=>{
-  
-      router.push(item.url);
-     
-    }
+ 
     moduleClick = (item)=>{
-      this.setState({selectedModule: item})
+      this.setState({selectedModule: item, outSync:true})
     }
     state ={
-      selectedModule: this.props.selectedModule
+      selectedModule: this.props.selectedModule,
+      outSync:false
+    }
+    componentDidMount(){
+      router.events.on('routeChangeComplete', (url) => {
+        this.setState({outSync: false})
+      })
     }
 
     render() {
         const { classes,drawerOpen, modules } = this.props;
-        const {selectedModule } = this.state;
+        const {selectedModule, outSync } = this.state;
         var exp = selectedModule || this.props.selectedModule;
-     
+        if (!outSync)
+          exp = this.props.selectedModule;
         return  (<div className={classes.root}>
             {modules.map((item)=>{
             let currActive = exp === item.name;

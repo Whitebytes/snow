@@ -169,7 +169,7 @@ class AppFrame extends React.Component {
                 <BreadCrumbs/>
               </Typography>
               <Search />
-              <IconButton color="inherit" enabled={hasMenu}
+              <IconButton color="inherit" enabled={hasMenu.toString()}
                 onClick={this.onMnuClick}
                 >
                   <MoreVertIcon />
