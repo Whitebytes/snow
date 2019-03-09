@@ -20,7 +20,7 @@ class MenuRouter extends React.Component {
                 if (item.url==url){
                     this.props.moduleSelect(module.name);
                     this.props.menuSelect(item.name);
-                  
+                    console.log(url, item.name)
                 }
             })
         })
