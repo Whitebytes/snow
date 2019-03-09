@@ -1,4 +1,5 @@
-import { TOGGLE_DRAWER, MENU_LOAD , MENU_LOADED, MENU_CLICK, MODULE_CLICK, GQL_LOAD, GQL_LOADED } from "./actionTypes";
+import { TOGGLE_DRAWER, MENU_LOAD , MENU_LOADED, MENU_CLICK, MENU_SELECT, 
+  MODULE_SELECT, GQL_LOAD, GQL_LOADED } from "./actionTypes";
 
 export const toggleDrawer = () => ({
   type: TOGGLE_DRAWER
@@ -18,9 +19,12 @@ export const menuClick = (content) => ({
   type: MENU_CLICK,
   payload: content
 });
-
-export const moduleClick = (content) => ({
-  type: MODULE_CLICK,
+export const menuSelect = (content) => ({
+  type: MENU_SELECT,
+  payload: content
+});
+export const moduleSelect = (content) => ({
+  type: MODULE_SELECT,
   payload: content
 });
 

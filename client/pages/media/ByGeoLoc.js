@@ -9,6 +9,14 @@ import MediaRaw from '../../data/MediaRaw';
 import apiClient from "../../modules/ApiClient"
 import { connect } from "react-redux";
 
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const MediaRawWithApiClient = props => <MediaRaw apiClient={apiClient} {...props}/>
 const greatPlace = {lat: 52.6743317,lng:6.2571985};
 
@@ -30,8 +38,24 @@ class Index extends React.Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
+    let popperContent=<div>
+      <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Let Google help apps determine location. This means sending anonymous location data to
+              Google, even when no apps are running.
+            </DialogContentText>
+          </DialogContent>
+      <DialogActions>
+          <Button onClick={this.handleClose} color="primary">
+            Save changes
+          </Button>
+        </DialogActions>
+    </div>;
+    
+  
     return (
-      <AppFrame noBorder={true}>
+      <AppFrame noBorder={true} popperContent={popperContent}>
       <MediaRawWithApiClient>
         <GMap
           bootstrapURLKeys={{key: 'AIzaSyDKzVON9dMEWaJqWw8ARIa9wM2gU465btk'}}

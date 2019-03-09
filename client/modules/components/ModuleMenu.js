@@ -13,7 +13,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { connect } from "react-redux";
 import router from 'next/router';
 import Link from "next/link"; 
-import { menuClick, moduleClick } from "../../redux/actions";
 
 const styles = theme => ({
     root: {
@@ -37,21 +36,29 @@ const styles = theme => ({
 class ModuleMenu extends Component{
   
     menuClick = (item)=>{
-      this.props.menuClick(item.name)
+  
       router.push(item.url);
      
     }
+    moduleClick = (item)=>{
+      this.setState({selectedModule: item})
+    }
+    state ={
+      selectedModule: this.props.selectedModule
+    }
 
     render() {
-        const { classes, moduleClick,selectedModule } = this.props;
-
+        const { classes,drawerOpen, modules } = this.props;
+        const {selectedModule } = this.state;
+        var exp = selectedModule || this.props.selectedModule;
+     
         return  (<div className={classes.root}>
-            {this.props.modules.map((item)=>{
-            const { classes, drawerOpen, moduleClick,selectedModule } = this.props;
-            let currActive = selectedModule === item.name;
+            {modules.map((item)=>{
+            let currActive = exp === item.name;
+
           return  <ExpansionPanel key={item.name} 
               expanded={currActive}
-              onChange={ ()=> moduleClick(item.name)}>
+              onChange={ ()=> this.moduleClick(item.name)}>
               <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <ListItemIcon>
                         <ModuleIcon path={item.icon} />
@@ -64,20 +71,15 @@ class ModuleMenu extends Component{
                   item.menuItems.map((item) =>{
                       let mnuActive = item.name==this.props.selectedMenu;
                      
-                      return   <ListItem button key={item.name} className={mnuActive?classes.active :''}
-                      onClick={() => this.menuClick(item)}
-                         >
+                      return   <ListItem button key={item.name} className={mnuActive?classes.active :''} >
+                          
                       <ListItemIcon>
-                          <ModuleIcon path={item.icon} />
+                          <ModuleIcon path={item.icon} /> 
                       </ListItemIcon>
-                      {item.url.startsWith('http') ? 
-                      <a href={item.url} target="_blank">
+                     
+                     <Link href={item.url}>
                         <ListItemText primary={item.name} />
-                        </a>
-                        :
-                        <Link href={item.url}>
-                        <ListItemText primary={item.name} />
-                        </Link>}
+                       </Link>
                       </ListItem>;
                   })
                 }
@@ -94,11 +96,12 @@ const mapStateToProps = state => {
     return { 
       drawerOpen:state.menu.drawerOpen,
       selectedMenu: state.menu.selectedMenu,
-      selectedModule: state.menu.selectedModule
+      selectedModule: state.menu.selectedModule,
+      modules:state.menu.modules
     };
 };
 
 const toExp = connect(mapStateToProps,
-  {menuClick, moduleClick}
+ null
   )(withStyles(styles)(ModuleMenu));
 export default toExp;

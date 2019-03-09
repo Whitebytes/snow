@@ -1,34 +1,29 @@
-import { MENU_LOAD, MENU_LOADED, TOGGLE_DRAWER, MENU_CLICK, MODULE_CLICK } from "../actionTypes";
+import { MENU_LOAD, MENU_LOADED, TOGGLE_DRAWER, MENU_CLICK, MODULE_SELECT, MENU_SELECT } from "../actionTypes";
 import { loadingStates } from "../states";
 
-
-const path = () =>{
-  if (typeof(window)!='undefined'){
-    return window.location.pathname;
-  }
-}
 
 const initialState = {
     modules: [],
     drawerOpen: true,
-    loadState:loadingStates.UNLOADED,
+    menuState:loadingStates.UNLOADED,
     selectedMenu: null,
-    selectedModule:path()
+    selectedModule: null
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case MENU_LOAD: {
+      
       return {
         ...state,
-        loadState:loadingStates.LOADING
+        menuState:loadingStates.LOADING
       };
     }
    
     case MENU_LOADED: {
       return {
         ...state,
-        loadState:loadingStates.LOADED,
+        menuState:loadingStates.LOADED,
         modules: action.payload
       };
     }
@@ -46,7 +41,13 @@ export default function(state = initialState, action) {
         selectedMenu: action.payload
       };
     }
-    case MODULE_CLICK: {
+    case MENU_SELECT: {
+      return {
+        ...state,
+        selectedMenu: action.payload
+      };
+    }
+    case MODULE_SELECT: {
       return {
         ...state,
         selectedModule: action.payload

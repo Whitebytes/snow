@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
-import { moduleClick } from "../redux/actions"
 
 class MyDocument extends Document {
   render() {
@@ -65,7 +64,7 @@ MyDocument.getInitialProps = ctx => {
 
   // Render app and page and get the context of the page with collected side effects.
   let pageContext;
-  ctx.reduxStore.dispatch(moduleClick('Administrate'));
+  // ctx.reduxStore.dispatch(moduleClick('Administrate'));
 
   const page = ctx.renderPage(Component => {
     const WrappedComponent = props => {

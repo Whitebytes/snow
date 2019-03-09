@@ -1,0 +1,65 @@
+import React from 'react';
+import { connect } from "react-redux";
+import Router from 'next/router'
+import { menuSelect, moduleSelect, menu_load, menu_loaded } from "../../redux/actions";
+import { loadingStates } from "../../redux/states";
+import apiClient from "../ApiClient"
+
+import gql from "graphql-tag";
+const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon, url}}}`
+
+class MenuRouter extends React.Component {
+    selectMenu(){
+        const {modules} = this.props;
+        if (typeof(window)=='undefined')
+            return;
+        const url = window.location.pathname
+        
+        modules.map((module)=>{
+            module.menuItems.map((item)=>{
+                if (item.url==url){
+                    this.props.moduleSelect(module.name);
+                    this.props.menuSelect(item.name);
+                  
+                }
+            })
+        })
+    }
+    
+    componentDidMount(){
+        const {menuState, apiClient,  menu_load, menu_loaded} = this.props;
+        Router.events.on('routeChangeComplete', (url) => {
+            this.selectMenu(url)
+        })
+ 
+        if (menuState==loadingStates.UNLOADED){
+            menu_load();
+            apiClient
+                .query({query: moduleList}) 
+                .then((rest) => {
+                    
+                    menu_loaded(rest.data.modules);
+                    this.selectMenu();
+            }) 
+        } 
+    }
+    render() {
+        return this.props.children;
+    }
+}
+const mapStateToProps = state => {
+    return { 
+      selectedMenu: state.menu.selectedMenu,
+      selectedModule: state.menu.selectedModule,
+      menuState: state.menu.menuState,
+      modules:state.menu.modules
+    };
+};
+
+const withApiClient = props => <MenuRouter apiClient={apiClient} {...props}/>
+
+export default connect(
+    mapStateToProps,
+    {menuSelect, moduleSelect, menu_load, menu_loaded}
+    )(withApiClient);
+ 

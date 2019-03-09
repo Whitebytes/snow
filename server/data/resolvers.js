@@ -47,7 +47,14 @@ const resolvers = {
                 include: [{// Notice `include` takes an ARRAY
                     all: true, 
                     nested: true
-                }]
+                }],
+                order: [
+                    // Will escape title and validate DESC against a list of valid direction parameters
+                    ['id', 'ASC'],
+                    ['menuItems','id', 'ASC']
+                ]
+            
+                
               })
         },
     },

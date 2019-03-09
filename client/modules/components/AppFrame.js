@@ -10,23 +10,24 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import HomeIcon from '@material-ui/icons/Home';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Router from "next/router"; 
-import Fab from '@material-ui/core/Fab';
 
+import BreadCrumbs from './BreadCrumbs';
+import ProfileMenu from './ProfileMenu';
+import Popper from '@material-ui/core/Popper';
+import Fade from '@material-ui/core/Fade';
+import Paper from '@material-ui/core/Paper';
+
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ModuleMenu from './ModuleMenu';
-import MenuLoader from '../../data/MenuLoader'
+import Search from './Search';
 
-import apiClient from "../ApiClient"
+
 import { connect } from "react-redux";
 import { toggleDrawer } from "../../redux/actions";
+
 
 const drawerWidth = 240;
 
@@ -46,9 +47,7 @@ const styles = theme => ({
   drawerIn:{
     flex:5
   },
-  homeButton:{
-    margin: '0 0 0 10px'
-  },
+ 
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -115,15 +114,30 @@ const styles = theme => ({
   h5: {
     marginBottom: theme.spacing.unit * 2,
   },
+  popper:{
+    padding:10
+  }
 });
 
-const MenuLoaderWithApiClient = props => <MenuLoader apiClient={apiClient} {...props}/>
-
 class AppFrame extends React.Component {
+  state = {
+    anchorEl: null
+  }
+  onMnuClick= event => {
+    let an = this.state.anchorEl==event.currentTarget? null : event.currentTarget;
+    this.setState({ anchorEl: an });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
   render() {
-    const { classes, drawerOpen, toggleDrawer, title } = this.props;
-    console.log(drawerOpen)
+    const { classes, drawerOpen, toggleDrawer, title, popperContent } = this.props;
+    const { anchorEl } = this.state;
+    var hasMenu = Boolean(popperContent);
+
+     
     return (
       <React.Fragment>
         <CssBaseline />
@@ -134,16 +148,17 @@ class AppFrame extends React.Component {
           >
             <Toolbar disableGutters={!drawerOpen} className={classes.toolbar}>
               <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={toggleDrawer}
-                className={classNames(
-                  classes.menuButton,
-                  drawerOpen && classes.menuButtonHidden,
-                )}
-              >
+                  color="inherit"
+                  aria-label="Open drawer"
+                  onClick={toggleDrawer}
+                  className={classNames(
+                    classes.menuButton,
+                    drawerOpen && classes.menuButtonHidden,
+                  )}
+                >
                 <MenuIcon />
               </IconButton>
+
               <Typography
                 component="h1"
                 variant="h6"
@@ -151,13 +166,27 @@ class AppFrame extends React.Component {
                 noWrap
                 className={classes.title}
               >
-                {title}
+                <BreadCrumbs/>
               </Typography>
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+              <Search />
+              <IconButton color="inherit" enabled={hasMenu}
+                onClick={this.onMnuClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+
+                <Popper  open={Boolean(anchorEl)} anchorEl={anchorEl} transition  >
+                  {({ TransitionProps }) => (
+                    <Fade {...TransitionProps} timeout={350}>
+                      <Paper className={classes.popper} >
+                        <Typography className={classes.typography}>
+                          {popperContent}
+                        </Typography>
+                      </Paper>
+                    </Fade>
+                  )}
+                </Popper>
+               <ProfileMenu />
             </Toolbar>
           </AppBar>
           <Drawer
@@ -169,19 +198,15 @@ class AppFrame extends React.Component {
           >
             <div className={classes.toolbarIcon}>
 
-
-            <Fab aria-label="Delete" color="secondary"  className={classes.homeButton}
-            onClick={()=>{Router.push('/')}} >
-              <HomeIcon />
-            </Fab>
-           <div className={classes.drawerIn}></div>
+              <div className={classes.drawerIn}></div>
               <IconButton onClick={toggleDrawer} >
                 <ChevronLeftIcon />
                 </IconButton>
             </div>
             <Divider />
             <List>
-              <MenuLoaderWithApiClient>{({modules})=><ModuleMenu modules={modules}/>}</MenuLoaderWithApiClient></List>
+              <ModuleMenu />
+              </List>
             <Divider />
           
           </Drawer>

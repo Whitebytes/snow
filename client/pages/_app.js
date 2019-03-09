@@ -9,6 +9,7 @@ import store from "../redux/store";
 import withReduxStore from '../redux/withReduxStore'
 import NProgress from 'nprogress'
 import Router from 'next/router'
+import MenuRouter from '../modules/components/MenuRouter'
 
 Router.events.on('routeChangeStart', url => {
   NProgress.start()
@@ -37,6 +38,7 @@ class MyApp extends App {
     return (
 
       <Provider store={store}>
+      <MenuRouter>
       <Container>
         {/* Wrap every page in Jss and Theme providers */}
         <JssProvider
@@ -57,9 +59,11 @@ class MyApp extends App {
           </MuiThemeProvider>
         </JssProvider>
       </Container>
+      </MenuRouter>
       </Provider>
     );
   }
 }
 
 export default withReduxStore(MyApp);
+
