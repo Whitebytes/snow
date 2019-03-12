@@ -27,8 +27,9 @@ const typeDefs = `
         type: String!
         connectorId: String!
         blobRef: String!
-        userOwner: String!
-        props: String!
+        userOwner: User
+        props: String!,
+        createdAt: String!
     }
 
     type Module {

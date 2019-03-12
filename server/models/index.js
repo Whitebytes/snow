@@ -3,7 +3,6 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-import seeder from '../util/Seed';
 
 var config    = require(__dirname + '/../config/config.js')[env];
 const db = {};
@@ -21,6 +20,7 @@ fs
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
+
     const model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
@@ -31,11 +31,27 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-db.sequelize = sequelize;
+const seed = async (db)=>{
+  var dirName =__dirname+'/../util/seeds';
+  var seedResult={};
+  var files =await fs
+  .readdirSync(dirName)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+  }).sort();
+ 
+  for (var idx in files){
+    const seeder = require(path.join(dirName, files[idx])).default;
+    seedResult = await seeder.apply(db, seedResult);
+  }
+  
+}
+
+db.sequelize = sequelize; 
 db.Sequelize = Sequelize;  
 db.sequelize.sync({force: true}).
   then(()=>{
-    seeder.apply(db);
+    seed(db)
   }
   )
 

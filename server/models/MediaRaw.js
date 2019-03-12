@@ -25,10 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         blobRef:{
             type: DataTypes.STRING(250)
         },
-        userOwner:{
-            type: DataTypes.UUID,
-            allowNull: false
-        },
+       
         props:{
             type: DataTypes.JSON,
             allowNull: false
@@ -36,16 +33,14 @@ module.exports = (sequelize, DataTypes) => {
     });
     MediaRaw.associate = function(models) {
         // A user can have many post
-        MediaRaw.belongsTo(models.User, {as: 'owner', foreignKey:'userOwner'});
-    };
-    MediaRaw.associate = (models) => {
+        MediaRaw.belongsTo(models.User, {as: 'userOwner', foreignKey:'userOwnerId'});
         MediaRaw.belongsToMany(models.Label, {
-          through: 'MediaLabels',
-          as: 'labels',
-          foreignKey: 'mediaId'
-        });
-      };
-
+            through: 'MediaLabels',
+            as: 'labels',
+            foreignKey: 'mediaId'
+          });
+    };
+ 
     return MediaRaw;
 };
 /* Sample data 

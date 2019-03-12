@@ -7,7 +7,7 @@ const tagsList = ['thumbnailed','stitched', 'rendered',
 'mapoverlay','autocolored', 'sterns found', 'sterns counted','hot storage','cold storage','video','nature','drone image',
 'high-res','bird project']
  const maxTags = 5;
-function getRandomInt(max) {
+  function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max-1));
   }
 

@@ -8,7 +8,8 @@ module.exports = {
         "database": process.env.DB_NAME,
         "host": process.env.DB_HOST,
         "port" :  process.env.POSTGRES_PORT,
-        "dialect": "postgres"
+        "dialect": "postgres",
+        "logging": false
     },
     "production": {
         "username": process.env.DB_USERNAME,

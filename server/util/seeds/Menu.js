@@ -9,96 +9,10 @@ const blobService = storage.createBlobService();
 const groningen = { lat: 53.2217873, lng: 6.4956536 }; 
 
 
-const listBlobs = async () => {
-  return new Promise((resolve, reject) => {
-      blobService.listBlobsSegmented(containerName, null, (err, data) => {
-          if (err) {
-              reject(err);
-          } else {
-              resolve({ message: `${data.entries.length} blobs in '${containerName}'`, blobs: data.entries });
-          }
-      });
-  });
-};
-
 const seeder = {};
-seeder.apply = async (db)=>{
+seeder.apply = async (db, seedResult)=>{
   let mnuId=1;  
  
-  var user = await db
-    .User.create({
-      id: '1223ff59-7a5e-4add-ab7c-981f5e3d2237',
-      firstName: 'GeertJan',
-      lastName: 'Kemme',
-      email: 'geertjan@whitebytes.nl',
-      password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
-      avatar: '/static/1.jpg'
-    });
-    
-    var connector = await db.Connector.create({
-      id:uuid(),
-      name:'Azure',
-      props:{}
-    })
-
-    var projects =[
-      {
-        name: "Provincie NH",
-        description:`Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-        without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat
-        to medium-low, add reserved shrimp and mussels, tucking them down into the rice, and
-        cook again without stirring, until mussels have opened and rice is just tender, 5 to 7
-        minutes more. (Discard any mussels that don’t open.)`,
-        userOwnerId: '1223ff59-7a5e-4add-ab7c-981f5e3d2237',
-        mapProps:'52.6699173,4.8706066,10',
-        img: 'https://cdn01.pijpermedia.nl/3VEhyj8QN6mZLqemaPjyiyysPO8=/670x377/smart/https://cdn.indicium.nu/source/panorama/uploads/2016/04/ratten-X5wLXeMr-thumb.jpg'
-      },
-      {
-        name: "Fotovallen friesland",
-        description:` Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-        heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-        browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving
-        chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion,
-        salt and pepper, and cook, stirring often until thickened and fragrant, about 10
-        minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.`,
-        userOwnerId: '1223ff59-7a5e-4add-ab7c-981f5e3d2237',
-        mapProps:'53.0867964,6.0749829,10',
-        img: 'https://paardenpro.nl/wp-content/uploads/fries-paard.jpg'
-      }
-  ]
-  projects.map(item =>{
-    db.Project.create({
-      id:uuid(),
-      ...item
-    })
-  })
-
-  listBlobs().then(({blobs})=>{
-      blobs.map((item,index)=>{
-        var idx = item.name.lastIndexOf('.');
-        db.MediaRaw.create({
-          id:uuid(),
-          name: item.name.substring(0, idx-1),
-          type: item.name.substring(idx),
-          connectorId:connector.id, //azure
-          userOwner: user.id,
-          blobRef: `https://whitebytes.blob.core.windows.net/${containerName}/${item.name}`,
-          props:{
-            lat: groningen.lat +
-              0.01 * index *
-              Math.sin(30 * Math.PI * index / 180) *
-              Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
-          lng: groningen.lng +
-            0.01 * index *
-            Math.cos(70 + 23 * Math.PI * index / 180) *
-            Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180)
-          }
-        })
-      })
-    }) 
-
-    try {
-      
       
       await db.Module.create({
         id: 1,
@@ -212,9 +126,7 @@ seeder.apply = async (db)=>{
             icon: 'M20 19.59V8.83c0-.53-.21-1.04-.59-1.41l-4.83-4.83c-.37-.38-.88-.59-1.41-.59H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c.45 0 .85-.15 1.19-.4l-4.43-4.43c-.86.56-1.89.88-3 .82-2.37-.11-4.4-1.96-4.72-4.31-.44-3.35 2.45-6.18 5.83-5.61 1.95.33 3.57 1.85 4 3.78.33 1.46.01 2.82-.7 3.9L20 19.59zM9 13c0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3-3 1.34-3 3z'
           });
 
-        
-      }
-      catch(e){console.log(e)}
+          return seedResult;
       
 }
 

@@ -24,16 +24,24 @@ const resolvers = {
             return await User.all();
         },
         async queryUsers(_,{clause}) {
-            return await User.findAll({where: JSON.parse(clause)})
+            return await User.findAll({
+                where: JSON.parse(clause)
+            })
         },
         async queryMediaRaw(_,{clause}) {
-            return await MediaRaw.findAll({where: JSON.parse(clause)}).map(item =>{
+            var res= await MediaRaw.findAll({
+                
+                include: [{
+                    all: true, 
+                    nested: true
+                }],
+                where: JSON.parse(clause)}).map(item =>{
                 return {
                       ...item.dataValues,
                     props:JSON.stringify(item.props)
                 }
             })
-  
+            return res;
         },
         // Get a user by it ID
         async fetchUser(_,{ id},{authUser} ) {

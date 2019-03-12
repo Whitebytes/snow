@@ -59,27 +59,29 @@ class MediaCard extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, media } = this.props;
 
     return (
       <Card className={classes.card}>
         <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          }
+         avatar={
+          <Avatar aria-label="Recipe" alt={media.userOwner.firstName} src={media.userOwner.avatar} className={classes.avatar} />
+        }
           action={
             <IconButton>
               <MoreVertIcon />
             </IconButton>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={media.name}
+          subheader={ new Intl.DateTimeFormat('nl-NL',{ 
+            year: 'numeric', 
+            month: 'long', 
+            day: '2-digit' 
+        }).format(new Date(parseInt(media.createdAt)))}
         />
         <CardMedia
           className={classes.media}
-          image={''+this.props.url}
+          image={media.blobRef}
           title="Paella dish"
         />
         
