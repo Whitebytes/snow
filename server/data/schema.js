@@ -7,6 +7,7 @@ const typeDefs = `
         firstName: String!
         lastName: String
         email: String!
+        avatar: String!
         token: String
     }
     
@@ -36,6 +37,17 @@ const typeDefs = `
         icon: String
         menuItems: [MenuItem]
     }
+
+    type Project {
+        id: ID!
+        name: String!
+        description: String
+        userOwner: User,
+        mapProps: String!
+        img: String!
+        createdAt: String!
+    }
+
     type Query {
         allUsers: [User]
         queryUsers(clause: String!): [User]
@@ -43,6 +55,7 @@ const typeDefs = `
         allMenuItems:[MenuItem]
         fetchUser(id: Int!): User
         modules:[Module]
+        queryProjects(clause: String!):[Project]
     }
 
     type Mutation {

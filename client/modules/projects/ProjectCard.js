@@ -16,14 +16,14 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import {RandomTags} from './Tag';
+import router from 'next/router';
 
 const styles = theme => ({
   card: {
     maxWidth: 300,
-    minHeight: 430,
     float: 'left',
-    margin: 15
+    margin: 15,
+    cursor:'pointer'
   },
   media: {
     height: 0,
@@ -31,7 +31,6 @@ const styles = theme => ({
   },
   actions: {
     display: 'flex',
-   
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -46,45 +45,48 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
-  tagList:{
-    overflow:'inherit'
-  }
 });
 
-class MediaCard extends React.Component {
+class ProjectCard extends React.Component {
   state = { expanded: false };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleCardClick = (id)=>{
+    router.push('/projects/details?id='+id)
+  }
   render() {
-    const { classes } = this.props;
+    const { classes, project } = this.props;
 
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} onClick={event =>{this.handleCardClick(project.id)}} >
         <CardHeader
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-            </Avatar>
+            <Avatar aria-label="Recipe" alt={project.userOwner.firstName} src={project.userOwner.avatar} className={classes.avatar} />
           }
           action={
             <IconButton>
               <MoreVertIcon />
             </IconButton>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={project.name}
+          subheader={ new Intl.DateTimeFormat('nl-NL',{ 
+            year: 'numeric', 
+            month: 'long', 
+            day: '2-digit' 
+        }).format(new Date(parseInt(project.createdAt)))}
         />
         <CardMedia
           className={classes.media}
           image={''+this.props.url}
           title="Paella dish"
         />
-        
-        <CardContent className={classes.tagList}>
-            {RandomTags()}
+        <CardContent>
+        <Typography paragraph>
+            {project.description}
+          </Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Add to favorites">
@@ -111,8 +113,18 @@ class MediaCard extends React.Component {
               Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
               minutes.
             </Typography>
-            
+            <Typography paragraph>
+              Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
+              heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
+              browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving
+              chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion,
+              salt and pepper, and cook, stirring often until thickened and fragrant, about 10
+              minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
+            </Typography>
            
+            <Typography>
+              Set aside off of the heat to let rest for 10 minutes, and then serve.
+            </Typography>
           </CardContent>
         </Collapse>
       </Card>
@@ -120,8 +132,8 @@ class MediaCard extends React.Component {
   }
 }
 
-MediaCard.propTypes = {
+ProjectCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MediaCard);
+export default withStyles(styles)(ProjectCard);

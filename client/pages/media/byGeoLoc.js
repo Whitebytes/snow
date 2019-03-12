@@ -4,24 +4,20 @@ import AppFrame from '../../modules/components/AppFrame';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import PropTypes from 'prop-types';
 import GMap from '../../modules/media/GMap';
-
-import MediaRaw from '../../data/MediaRaw';
-import apiClient from "../../modules/ApiClient"
+import BuObjects from '../../data/BuObjects';
 import { connect } from "react-redux";
-
-
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
+
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const MediaRawWithApiClient = props => <MediaRaw apiClient={apiClient} {...props}/>
 const greatPlace = {lat: 52.6743317,lng:6.2571985};
+const objName = 'mediaList'
+const query = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props}}`
 
 class Index extends React.Component {
-  
  
   static propTypes = {
     center: PropTypes.array,
@@ -38,6 +34,8 @@ class Index extends React.Component {
   shouldComponentUpdate = shouldPureComponentUpdate;
 
   render() {
+    const {data, ...rest} = this.props;
+  
     let popperContent=<div>
       <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
           <DialogContent>
@@ -56,33 +54,37 @@ class Index extends React.Component {
   
     return (
       <AppFrame noBorder={true} popperContent={popperContent}>
-      <MediaRawWithApiClient>
+      <BuObjects query={query} objectName={objName}>
         <GMap
           bootstrapURLKeys={{key: 'AIzaSyDKzVON9dMEWaJqWw8ARIa9wM2gU465btk'}}
-          //apiKey= // set if you need stats etc ...
-          center={this.props.center}
-          zoom={this.props.zoom}
-          markers={this.props.data.map((elem)=>{
+          markers={data.map((elem)=>{
             var {props, ...item} = elem;
-            
             var propObj = JSON.parse(props)
             return {
               ...propObj,
                 ...item
             }
-          })}>
+          })}
+          {...rest} >
       </GMap>
-      </MediaRawWithApiClient>
+      </BuObjects>
       </AppFrame>
     );
   }
 }
 
 const mapStateToProps = state => {
-  return { 
-      data:state.mediaRaw.records
+  return (state) => { 
+      if (state.buObjects[objName])
+        return {
+          loadState:state.buObjects[objName].state, 
+          data:state.buObjects[objName].records
+        }
+        return {}
   };
+
 };
+
 
 export default connect(
   mapStateToProps,

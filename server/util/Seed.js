@@ -31,7 +31,8 @@ seeder.apply = async (db)=>{
       firstName: 'GeertJan',
       lastName: 'Kemme',
       email: 'geertjan@whitebytes.nl',
-      password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2'
+      password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
+      avatar: '/static/1.jpg'
     });
     
     var connector = await db.Connector.create({
@@ -39,29 +40,61 @@ seeder.apply = async (db)=>{
       name:'Azure',
       props:{}
     })
-  
-    listBlobs().then(({blobs})=>{
-        blobs.map((item,index)=>{
-          var idx = item.name.lastIndexOf('.');
-          db.MediaRaw.create({
-            id:uuid(),
-            name: item.name.substring(0, idx-1),
-            type: item.name.substring(idx),
-            connectorId:connector.id, //azure
-            userOwner: user.id,
-            blobRef: `https://whitebytes.blob.core.windows.net/${containerName}/${item.name}`,
-            props:{
-              lat: groningen.lat +
-                0.01 * index *
-                Math.sin(30 * Math.PI * index / 180) *
-                Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
-            lng: groningen.lng +
+
+    var projects =[
+      {
+        name: "Provincie NH",
+        description:`Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
+        without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat
+        to medium-low, add reserved shrimp and mussels, tucking them down into the rice, and
+        cook again without stirring, until mussels have opened and rice is just tender, 5 to 7
+        minutes more. (Discard any mussels that don’t open.)`,
+        userOwnerId: '1223ff59-7a5e-4add-ab7c-981f5e3d2237',
+        mapProps:'52.6699173,4.8706066,10',
+        img: 'https://cdn01.pijpermedia.nl/3VEhyj8QN6mZLqemaPjyiyysPO8=/670x377/smart/https://cdn.indicium.nu/source/panorama/uploads/2016/04/ratten-X5wLXeMr-thumb.jpg'
+      },
+      {
+        name: "Fotovallen friesland",
+        description:` Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
+        heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
+        browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving
+        chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion,
+        salt and pepper, and cook, stirring often until thickened and fragrant, about 10
+        minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.`,
+        userOwnerId: '1223ff59-7a5e-4add-ab7c-981f5e3d2237',
+        mapProps:'53.0867964,6.0749829,10',
+        img: 'https://paardenpro.nl/wp-content/uploads/fries-paard.jpg'
+      }
+  ]
+  projects.map(item =>{
+    db.Project.create({
+      id:uuid(),
+      ...item
+    })
+  })
+
+  listBlobs().then(({blobs})=>{
+      blobs.map((item,index)=>{
+        var idx = item.name.lastIndexOf('.');
+        db.MediaRaw.create({
+          id:uuid(),
+          name: item.name.substring(0, idx-1),
+          type: item.name.substring(idx),
+          connectorId:connector.id, //azure
+          userOwner: user.id,
+          blobRef: `https://whitebytes.blob.core.windows.net/${containerName}/${item.name}`,
+          props:{
+            lat: groningen.lat +
               0.01 * index *
-              Math.cos(70 + 23 * Math.PI * index / 180) *
-              Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180)
-            }
-          })
+              Math.sin(30 * Math.PI * index / 180) *
+              Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
+          lng: groningen.lng +
+            0.01 * index *
+            Math.cos(70 + 23 * Math.PI * index / 180) *
+            Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180)
+          }
         })
+      })
     }) 
 
     try {
@@ -70,7 +103,7 @@ seeder.apply = async (db)=>{
       await db.Module.create({
         id: 1,
         name: 'Projects',
-        icon: 'M6.4 9.2h.2c.77 0 1.4.63 1.4 1.4v7c0 .77-.63 1.4-1.4 1.4h-.2c-.77 0-1.4-.63-1.4-1.4v-7c0-.77.63-1.4 1.4-1.4zM12 5c.77 0 1.4.63 1.4 1.4v11.2c0 .77-.63 1.4-1.4 1.4-.77 0-1.4-.63-1.4-1.4V6.4c0-.77.63-1.4 1.4-1.4zm5.6 8c.77 0 1.4.63 1.4 1.4v3.2c0 .77-.63 1.4-1.4 1.4-.77 0-1.4-.63-1.4-1.4v-3.2c0-.77.63-1.4 1.4-1.4z'
+        icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM8 17.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zM9.5 8c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5S9.5 9.38 9.5 8zm6.5 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'
       });
 
       await db.MenuItem.create({
@@ -138,21 +171,28 @@ seeder.apply = async (db)=>{
 
           await db.MenuItem.create({
             id: mnuId++,
+            name: 'Manage accounts',
+            moduleId: 3,
+            url: '/settings',
+            icon: 'M15 11V5.83c0-.53-.21-1.04-.59-1.41L12.7 2.71c-.39-.39-1.02-.39-1.41 0l-1.7 1.7C9.21 4.79 9 5.3 9 5.83V7H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2h-4zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z'
+          });
+          await db.MenuItem.create({
+            id: mnuId++,
+            name: 'Manage users',
+            moduleId: 3,
+            url: '/settings/users',
+            icon: 'M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z'
+          });
+
+          await db.MenuItem.create({
+            id: mnuId++,
             name: 'Github',
             moduleId: 3,
             url: 'https://github.com/Whitebytes/snow',
             icon: 'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z'
           });
 
-          await db.MenuItem.create({
-            id: mnuId++,
-            name: 'Manage users',
-            moduleId: 3,
-            url: '/settings',
-            icon: 'M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z'
-          });
-
-          await db.Module.create({
+         await db.Module.create({
             id: 4,
             name: 'Help center',
             icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92c-.5.51-.86.97-1.04 1.69-.08.32-.13.68-.13 1.14h-2v-.5c0-.46.08-.9.22-1.31.2-.58.53-1.1.95-1.52l1.24-1.26c.46-.44.68-1.1.55-1.8-.13-.72-.69-1.33-1.39-1.53-1.11-.31-2.14.32-2.47 1.27-.12.37-.43.65-.82.65h-.3C8.4 9 8 8.44 8.16 7.88c.43-1.47 1.68-2.59 3.23-2.83 1.52-.24 2.97.55 3.87 1.8 1.18 1.63.83 3.38-.19 4.4z'

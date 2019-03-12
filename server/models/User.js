@@ -20,6 +20,10 @@ const model = (sequelize, DataTypes) => {
             unique: true,
             allowNull: false
         },
+        avatar: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         password: {
             type: DataTypes.STRING,
             allowNull: false
@@ -29,15 +33,10 @@ const model = (sequelize, DataTypes) => {
         // A user can have many post
         User.hasMany(models.Token, {as: 'accessTokens', foreignKey:'userId'});
     };
-    User.beforeCreate((user, _ ) => {
+    /*User.beforeCreate((user, _ ) => {
         return user.id = uuid(); 
-    })
-    User.graphql = {
-        attributes: {
-            exclude: ['password'],
-            include: { namse: 'string', id: 'string' },
-        }
-    };
+    })*/
+  
     return User;
 }
 

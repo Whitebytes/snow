@@ -14,16 +14,25 @@ class MenuRouter extends React.Component {
         if (typeof(window)=='undefined')
             return;
         const url = window.location.pathname
-        
+        const urlParts = url.split('/');
+        const moduleName = '/'+ urlParts[1];
+        const isModuleIndexPage=urlParts.length==2;
+        let currMod=null;
+        let found=false
         modules.map((module)=>{
-            
             module.menuItems.map((item)=>{
+                if(item.url.startsWith(moduleName))
+                    currMod = module;
+
                 if (item.url===url){
+                    found=true;
                     this.props.moduleSelect(module.name);
                     this.props.menuSelect(item.name);
                 }
             })
         })
+        if (!found && currMod)
+        this.props.moduleSelect(currMod.name);
     }
     
     componentDidMount(){

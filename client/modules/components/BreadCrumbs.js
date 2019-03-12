@@ -49,8 +49,8 @@ class MuBreadCrumbs extends React.Component {
   render(){
 
       const { classes,modules, selectedMenu, selectedModule } = this.props;
-     
-       let currMod, currMenu, moduleMainPage
+      
+       let currMod, currMenu
        modules.map((module)=>{
           if (module.name==selectedModule) currMod=module;
           module.menuItems.map((item)=>{
@@ -59,11 +59,9 @@ class MuBreadCrumbs extends React.Component {
               module.mainItem = item
           })
       })
-      if (currMenu){
-      
-    }
-    if (!currMenu)
-        return '';
+      if (!currMod)
+      return '';
+
     return (
       
         <Breadcrumbs arial-label="Breadcrumb">
@@ -88,7 +86,7 @@ class MuBreadCrumbs extends React.Component {
             }
           />
       
-          { (currMenu != currMod.mainItem) ?  <StyledBreadcrumb
+          { ( currMenu && currMenu != currMod.mainItem) ?  <StyledBreadcrumb
             label={currMenu.name}
             href={currMenu.icon}
             avatar={
