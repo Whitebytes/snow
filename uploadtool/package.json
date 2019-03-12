@@ -1,0 +1,42 @@
+{
+  "name": "blob-storage-quickstart",
+  "version": "1.1.0",
+  "description": "Learn to use Node.js to upload, download, list and delete block blobs in a container in Azure Blob storage",
+  "main": "index.js",
+  "dependencies": {
+    "azure-storage": "^2.10.2",
+    "babel-cli": "^6.26.0",
+    "dotenv": "^5.0.0",
+    "yargs": "^11.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.0.0",
+    "babel-preset-env": "latest"
+  },
+  "scripts": {
+  
+    "start": "babel-node --presets ENV index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azure-Samples/storage-blobs-node-quickstart.git"
+  },
+  "keywords": [
+    "Azure",
+    "Storage",
+    "Quick",
+    "Start",
+    "Blob",
+    "BlockBlob",
+    "Upload",
+    "Download",
+    "Container",
+    "List"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Azure-Samples/storage-blobs-node-quickstart/issues"
+  },
+  "homepage": "https://github.com/Azure-Samples/storage-blobs-node-quickstart#readme"
+}
