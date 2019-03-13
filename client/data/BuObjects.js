@@ -12,19 +12,23 @@ class BuObjects extends Component{
     componentDidMount(){
         const { objectName, query}  = this.props;
         if (!this.props.buObjects[objectName]){
-            this.props.buo_load({name:objectName});
-        
-            apiClient
-                .query({query: gql(query)}) 
-                .then((rest) => {
-                    let tableName 
-                    for(tableName in rest.data);
-                    this.props.buo_received({
-                        name: objectName,
-                        records: rest.data[tableName]});
+            this.props.buo_load({name:objectName, query:query});
+        } else if (this.props.buObjects[objectName].query ==query){
+            return;
+        }else {
+            this.props.buo_load({name:objectName, query:query});
+        }
+        apiClient
+            .query({query: gql(query)}) 
+            .then((rest) => {
+                let tableName 
+                for(tableName in rest.data);
+                this.props.buo_received({
+                    name: objectName,
+                    records: rest.data[tableName]});
             })
-        } 
-    }
+        }
+    
 
     render() {  
         const { children,...props } = this.props;

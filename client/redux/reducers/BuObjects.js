@@ -13,6 +13,7 @@ export default function(state = initialState, action) {
       table[action.payload.name] =
       {
         records:[], 
+        query:action.payload.query,
         state: loadingStates.LOADING
       }
       return {

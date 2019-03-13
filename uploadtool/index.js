@@ -2,10 +2,17 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
 }
 import download  from './ImageDownloader';
-import fs  from 'fs';
-
-const path = require('path');
+const { lstatSync, readdirSync } = require('fs')
+const { join } = require('path')
 const storage = require('azure-storage');
+const uuid = require('uuid/v4'); // ES5
+
+const isDirectory = source => lstatSync(source).isDirectory()
+const isFile = source => lstatSync(source).isFile()
+const getDirectories = source =>
+  readdirSync(source).map(name => join(source, name)).filter(isDirectory)
+const getFiles = source =>
+  readdirSync(source).map(name => join(source, name)).filter(isFile)
 
 const blobService = storage.createBlobService();
 
@@ -46,10 +53,12 @@ const uploadString = async (containerName, blobName, text) => {
     });
 };
 
-const uploadLocalFile = async (containerName, filePath) => {
+const uploadLocalFile = async (containerName, filePath, blobName) => {
     return new Promise((resolve, reject) => {
-        const fullPath = path.resolve(filePath);
-        const blobName = path.basename(filePath);
+        //console.log(filePath); return;
+        const fullPath = filePath;
+        if (!blobName)
+            blobName = path.basename(filePath);
         blobService.createBlockBlobFromLocalFile(containerName, blobName, fullPath, err => {
             if (err) {
                 reject(err);
@@ -109,7 +118,7 @@ const deleteContainer = async (containerName) => {
     });
 };
 
-const containerName = "demo";
+const containerName = "demo3";
 const blobName = "quickstart.txt";
 const content = "hello Blob SDK";
 const localFilePath = "./readme.md";
@@ -164,7 +173,104 @@ const execute = async () => {
     } catch(e){
         console.log(e);
     }
-  */  
+  */ 
+    const groningen = { lat: 53.2217873, lng: 6.4956536 }; 
+    
+    const getRandomInt = (max) => {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+    // let indexFile={}
+    // indexFile.LoremPicsum=[];
+    // await listBlobs(containerName).then(({blobs})=>{
+    //     blobs.map((item,index)=>{
+    //     var now=new Date();
+    //     var idx = item.name.lastIndexOf('.');
+    //     indexFile.LoremPicsum.push({
+    //         id:uuid(),
+    //         name:item.name.substring(0, idx-1),
+    //         type: item.name.substring(idx),
+    //         createdAt: new Date().setDate(now.getDate()-getRandomInt(30)),
+    //         lat: groningen.lat +
+    //             0.01 * index *
+    //             Math.sin(30 * Math.PI * index / 180) *
+    //             Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
+    //         lng: groningen.lng +
+    //             0.01 * index *
+    //             Math.cos(70 + 23 * Math.PI * index / 180) *
+    //             Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180)
+    //         })
+    //     });
+       
+    // }) 
+    //await deleteContainer(containerName);
+    // const root = '/home/geertjan/Downloads/golmbach, reconyx/golmbach, reconyx';
+    // var dirs = getDirectories(root);
+    // var indexFile = {}
+    // await createContainer(containerName).then(()=>{
+       
+    //     dirs.forEach(dirName => {
+    //         let projectName =  dirName.substr(root.length+1);
+    //         indexFile.vidval=[]
+    //         getFiles(dirName).map((fullname, index)=>{
+    //             let fileName = fullname.substr(dirName.length+1);
+    //             var now=new Date();
+    //             var idx = fileName.lastIndexOf('.');
+    //             var fileC = {
+    //                 id:uuid(),
+    //                 name:fileName.substring(0, idx-1),
+    //                 type: fileName.substring(idx),
+    //                 createdAt: new Date().setDate(now.getDate()-getRandomInt(30)),
+    //                 lat: groningen.lat +
+    //                     0.01 * index *
+    //                     Math.sin(30 * Math.PI * index / 180) *
+    //                     Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
+    //                 lng: groningen.lng +
+    //                     0.01 * index *
+    //                     Math.cos(70 + 23 * Math.PI * index / 180) *
+    //                     Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
+    //                 labels: [projectName]
+    //                 }
+    //             indexFile.vidval.push(fileC);
+    //             console.log(containerName, fullname, fileC.id);
+    //             uploadLocalFile(containerName, fullname, fileC.id );
+    //         })
+            
+    //     })
+    // })
+    
+    const root = '/home/geertjan/Downloads/Downloads/';
+    //await deleteContainer(containerName);
+    var indexFile = {}
+    indexFile.picsum=[]
+    let projectName='picsum'
+    await createContainer(containerName).then(()=>{
+        getFiles(root).map((fullname, index)=>{
+            let fileName = fullname.substr(root.length+1);
+            var now=new Date();
+            var idx = fileName.lastIndexOf('.');
+            var fileC = {
+                id:uuid(),
+                name:fileName.substring(0, idx-1),
+                type: fileName.substring(idx),
+                createdAt: new Date().setDate(now.getDate()-getRandomInt(30)),
+                lat: groningen.lat +
+                    0.01 * index *
+                    Math.sin(30 * Math.PI * index / 180) *
+                    Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
+                lng: groningen.lng +
+                    0.01 * index *
+                    Math.cos(70 + 23 * Math.PI * index / 180) *
+                    Math.cos(50 * Math.PI * index / 180) + Math.sin(5 * index / 180),
+                labels: [projectName]
+                }
+            indexFile.picsum.push(fileC);
+            console.log(containerName, fullname, fileC.id);
+            uploadLocalFile(containerName, fullname, fileC.id );
+        })
+    })
+    let txt = JSON.stringify(indexFile);
+    await uploadString(containerName, "index.json", txt);
+    console.log(txt)
 }
 
 

@@ -21,17 +21,7 @@ const typeDefs = `
         updatedAt: DateTime! # will be generated
     }
 
-    type MediaRaw {
-        id:  ID!
-        name: String!
-        type: String!
-        connectorId: String!
-        blobRef: String!
-        userOwner: User
-        props: String!,
-        createdAt: String!
-    }
-
+    
     type Module {
         id: Int!
         name: String!
@@ -47,6 +37,18 @@ const typeDefs = `
         mapProps: String!
         img: String!
         createdAt: String!
+    }
+    type MediaRaw {
+        id:  ID!
+        name: String!
+        type: String!
+        connectorId: String!
+        blobRef: String!
+        userOwner: User!
+        props: String!,
+        project: Project!
+        createdAt: String!,
+        labels:String
     }
 
     type Query {

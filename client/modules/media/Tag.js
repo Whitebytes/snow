@@ -11,7 +11,9 @@ const tagsList = ['thumbnailed','stitched', 'rendered',
     return Math.floor(Math.random() * Math.floor(max-1));
   }
 
-  export const RandomTags = () => {
+  export const RandomTags = (extra) => {
+    if (!extra)
+      extra=[];
     var count = getRandomInt(Math.min(tagsList.length, maxTags));
     var source = [...tagsList]
     var result = [];
@@ -19,7 +21,7 @@ const tagsList = ['thumbnailed','stitched', 'rendered',
         count--;
         result.push(source.splice(getRandomInt(source.length),1));
     }
-    return result.map((tagName)=> <WithStyle tag={tagName} />
+    return result.concat(extra).map((tagName)=> <WithStyle tag={tagName} />
     );
 }
 

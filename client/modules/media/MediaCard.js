@@ -20,8 +20,9 @@ import {RandomTags} from './Tag';
 
 const styles = theme => ({
   card: {
-    maxWidth: 300,
-    minHeight: 430,
+    
+    height:450,
+    width:320,
     float: 'left',
     margin: 15
   },
@@ -65,7 +66,8 @@ class MediaCard extends React.Component {
       <Card className={classes.card}>
         <CardHeader
          avatar={
-          <Avatar aria-label="Recipe" alt={media.userOwner.firstName} src={media.userOwner.avatar} className={classes.avatar} />
+          media.userOwner?
+          <Avatar aria-label="Recipe" alt={media.userOwner.firstName} src={media.userOwner.avatar} className={classes.avatar} />:''
         }
           action={
             <IconButton>
@@ -86,7 +88,7 @@ class MediaCard extends React.Component {
         />
         
         <CardContent className={classes.tagList}>
-            {RandomTags()}
+            {RandomTags(JSON.parse(media.labels))}
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Add to favorites">

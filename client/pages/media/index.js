@@ -2,6 +2,7 @@
 import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import MediaList from '../../modules/media/MediaList';
+const query = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props,labels, userOwner{firstName, avatar}, createdAt}}`
 
 class index extends React.Component {
   static getInitialProps({query}) {
@@ -11,7 +12,7 @@ class index extends React.Component {
 
     return (
       <AppFrame>
-       <MediaList {...this.props} />
+       <MediaList query={query} {...this.props} />
   
       </AppFrame>
     );

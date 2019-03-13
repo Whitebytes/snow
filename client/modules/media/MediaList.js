@@ -4,7 +4,6 @@ import MediaCard from '../../modules/media/MediaCard';
 import BuObjects from '../../data/BuObjects';
 import { connect } from "react-redux";
 const objName = 'mediaList'
-const query = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props, userOwner{firstName, avatar}, createdAt}}`
 
 class MediaList extends React.Component {
   static getInitialProps({query}) {
@@ -12,14 +11,15 @@ class MediaList extends React.Component {
   }
 
   getItems = ()=>{
-    return this.props.data.slice(0,10).map((item)=>{
+
+    return this.props.data.slice(0,30).map((item)=>{
+        if (!item || !item.userOwner) return ''
           return (<MediaCard key={item.id} media={item}></MediaCard>);
     })
   }
   render() {
     return (
-     
-       <BuObjects query={query} objectName={objName}>
+       <BuObjects query={this.props.query} objectName={objName}>
          {this.getItems()}
         </BuObjects>
     );
@@ -35,7 +35,7 @@ const mapStateToProps = state => {
           loadState:state.buObjects[objName].state, 
           data:state.buObjects[objName].records
         }
-        return {}
+        return {data:[]}
   };
 };
 

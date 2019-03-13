@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        labels:{
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
         blobRef:{
             type: DataTypes.STRING(250)
         },
@@ -34,11 +38,12 @@ module.exports = (sequelize, DataTypes) => {
     MediaRaw.associate = function(models) {
         // A user can have many post
         MediaRaw.belongsTo(models.User, {as: 'userOwner', foreignKey:'userOwnerId'});
-        MediaRaw.belongsToMany(models.Label, {
-            through: 'MediaLabels',
-            as: 'labels',
-            foreignKey: 'mediaId'
-          });
+        MediaRaw.belongsTo(models.Project, {as: 'project', foreignKey:'projectId'});
+        // MediaRaw.belongsToMany(models.Label, {
+        //     through: 'MediaLabels',
+        //     as: 'labels',
+        //     foreignKey: 'mediaId'
+        //   });
     };
  
     return MediaRaw;

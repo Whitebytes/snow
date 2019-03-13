@@ -26,6 +26,7 @@ import MediaList from '../../modules/media/MediaList';
 import ProjectTools from './ProjectTools'
 const objName = 'mediaList'
 const query = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props}}`
+const mediaQuery = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props, userOwner{firstName, avatar}, createdAt}}`
 
 
 const styles = theme => ({
@@ -96,7 +97,19 @@ class ProjectDetails extends React.Component {
   }
   render() {
     const { classes, project, data, ...rest } = this.props;
-
+    const mediaQuery = `query{queryMediaRaw(clause: "{\\"projectId\\": \\"${project.id}\\"}") {
+          id
+          name
+          blobRef
+          props,
+          createdAt,
+          labels,
+          userOwner {
+            firstName
+            avatar
+          }
+        }
+      }`
     return (
     <div>
     <div  className={classes.canvas}>
@@ -119,8 +132,8 @@ class ProjectDetails extends React.Component {
         />
         <CardMedia
           className={classes.media}
-          image={''+this.props.url}
-          title="Paella dish"
+          image={project.img}
+          title={project}
         />
         <CardContent>
         <Typography paragraph>
@@ -206,7 +219,7 @@ class ProjectDetails extends React.Component {
           title={`Uploaded media`}
           ></CardHeader>
           <CardContent>
-              <MediaList />
+              <MediaList query={mediaQuery} />
             </CardContent>
             </Card>
       </div>

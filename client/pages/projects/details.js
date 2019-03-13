@@ -14,13 +14,6 @@ class index extends React.Component {
     return {...query, ...this.props}
   }
 
-  getItems = ()=>{
-    if (!this.props.data)
-      return null;
-    return this.props.data.slice(0,10).map((item)=>{
-      return (<ProjectDetails key={item.id} project={item} url={item.img}></ProjectDetails>);
-    })
-  }
   render() {
    
     const query = `query{queryProjects(clause:"{\\"id\\":\\"${this.props.id}\\"}"){id,name,description,createdAt,
@@ -28,7 +21,7 @@ class index extends React.Component {
     return (
       <AppFrame>
         <BuObjects query={query} objectName={objName}>
-         {this.getItems()}
+         {this.props.data.map((project)=><ProjectDetails key={project.id} project={project} ></ProjectDetails>)}
         </BuObjects>
   
       </AppFrame>
@@ -45,7 +38,7 @@ const mapStateToProps = state => {
           loadState:state.buObjects[objName].state, 
           data:state.buObjects[objName].records
         }
-        return {}
+        return {data:[]}
   };
 };
 
