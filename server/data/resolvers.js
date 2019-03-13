@@ -30,15 +30,18 @@ const resolvers = {
         },
         async queryMediaRaw(_,{clause}) {
             var res= await MediaRaw.findAll({
-                
                 include: [{
                     all: true, 
                     nested: true
                 }],
+                order: [
+                    // Will escape title and validate DESC against a list of valid direction parameters
+                    ['createdAt', 'ASC']
+                ],
                 where: JSON.parse(clause)}).map(item =>{
-                return {
-                      ...item.dataValues,
-                    props:JSON.stringify(item.props)
+                    return {
+                        ...item.dataValues,
+                        props:JSON.stringify(item.props)
                 }
             })
             return res;
@@ -59,7 +62,6 @@ const resolvers = {
                     ['id', 'ASC'],
                     ['menuItems','id', 'ASC']
                 ]
-            
                 
               })
         },

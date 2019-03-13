@@ -2,23 +2,48 @@
 import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import MediaList from '../../modules/media/MediaList';
-const query = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props,labels, userOwner{firstName, avatar}, createdAt}}`
+import { connect } from "react-redux";
+import BuObjects from '../../data/BuObjects'
+const objName = 'mediaList'
 
-class index extends React.Component {
-  static getInitialProps({query}) {
-    return {query,data:[], ...this.props}
+const query = `query{queryMediaRaw(clause: "{}") {
+  id
+  name
+  blobRef
+  props,
+  createdAt,
+  labels,
+  userOwner {
+    firstName
+    avatar
   }
+}
+}`
+class index extends React.Component {
+  
   render() {
 
     return (
       <AppFrame>
-       <MediaList query={query} {...this.props} />
-  
+        <BuObjects query={query} objectName={objName}>
+          <MediaList mediaItems={this.props.data} {...this.props} />
+       </BuObjects>
       </AppFrame>
     );
   }
 }
 
+const mapStateToProps = state => {
+  return (state) => { 
+      
+      if (state.buObjects[objName])
+        return {
+          loadState:state.buObjects[objName].state, 
+          data:state.buObjects[objName].records
+        }
+        return {data:[]}
+  };
+};
 
 
-export default index;
+export default connect(mapStateToProps, null)(index);

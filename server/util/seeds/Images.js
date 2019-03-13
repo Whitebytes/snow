@@ -76,27 +76,25 @@ seeder.apply = async (db, prevSeeds)=>{
     };
     createProject('demo2','vidval',{ 
       name: "Fotovallen friesland",
-      description:` Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-      heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-      browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving
-      chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion,
-      salt and pepper, and cook, stirring often until thickened and fragrant, about 10
-      minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.`,
+      description:`Hardware: Reconyx HS2X
+
+
+      At Greenpix we provide a full solution to all your imagery data needs.  Using UAV’s, Motion detectors, intervalometers, under water rovers with camera rigs (depending on the requirements) 
+      we have a wide array of tools to gather all the data you desire, on every location imaginable.`,
       userOwnerId: prevSeeds.randomUser().id,
       mapProps:'53.0867964,6.0749829,10',
       img: 'https://whitebytes.blob.core.windows.net/demo2/f67395d5-78be-4c1c-a268-740849cbc44f'
     })
 
     createProject('demo3','picsum',{ 
-      name: "Provincie NH",
-      description:`Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-      without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat
-      to medium-low, add reserved shrimp and mussels, tucking them down into the rice, and
-      cook again without stirring, until mussels have opened and rice is just tender, 5 to 7
-      minutes more. (Discard any mussels that don’t open.)`,
+      name: "Krabbenscheer",
+      description:`Krabbenscheer:
+
+      Hardware: DJI Inspire     
+      Mapping, stitching en bepaling bedekkingsgraad Krabbenscheer voor Waterschappen`,
       userOwnerId: prevSeeds.randomUser().id,
       mapProps:'52.6699173,4.8706066,10',
-      img: 'https://cdn01.pijpermedia.nl/3VEhyj8QN6mZLqemaPjyiyysPO8=/670x377/smart/https://cdn.indicium.nu/source/panorama/uploads/2016/04/ratten-X5wLXeMr-thumb.jpg'
+      img: 'https://greenpix.nl/wp-content/uploads/2016/12/DJI_0623-1.jpg'
     })
 }
 

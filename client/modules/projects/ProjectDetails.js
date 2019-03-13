@@ -22,11 +22,8 @@ import GMap from '../../modules/media/GMap';
 import { connect } from "react-redux";
 import MediaList from '../../modules/media/MediaList';
 
-
 import ProjectTools from './ProjectTools'
 const objName = 'mediaList'
-const query = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props}}`
-const mediaQuery = `query{queryMediaRaw(clause:"{}"){id,name,blobRef,props, userOwner{firstName, avatar}, createdAt}}`
 
 
 const styles = theme => ({
@@ -64,7 +61,7 @@ const styles = theme => ({
 
   },
   media: {
-    paddingTop: '16.25%', // 16:9
+    height:150
   },
   actions: {
     display: 'flex',
@@ -112,11 +109,16 @@ class ProjectDetails extends React.Component {
       }`
     return (
     <div>
+      <BuObjects query={mediaQuery} objectName={objName}>
     <div  className={classes.canvas}>
+    
       <Card className={classes.card} onClick={event =>{this.handleCardClick(project.id)}} >
         <CardHeader
           avatar={
-            <Avatar aria-label="Recipe" alt={project.userOwner.firstName} src={project.userOwner.avatar} className={classes.avatar} />
+            <Avatar aria-label="Recipe" 
+              alt={project.userOwner.firstName} 
+              src={project.userOwner.avatar} 
+              className={classes.avatar} />
           }
           action={
             <IconButton>
@@ -187,7 +189,7 @@ class ProjectDetails extends React.Component {
         />
       <CardContent  className={classes.map}>
             
-      <BuObjects query={query} objectName={objName}>
+      
       
       <GMap
         bootstrapURLKeys={{key: 'AIzaSyDKzVON9dMEWaJqWw8ARIa9wM2gU465btk'}}
@@ -201,7 +203,7 @@ class ProjectDetails extends React.Component {
         })}
         {...rest} >
       </GMap>
-      </BuObjects></CardContent></Card>
+     </CardContent></Card>
       
       
       </div>
@@ -219,9 +221,10 @@ class ProjectDetails extends React.Component {
           title={`Uploaded media`}
           ></CardHeader>
           <CardContent>
-              <MediaList query={mediaQuery} />
+              <MediaList mediaItems={data} />
             </CardContent>
             </Card>
+            </BuObjects>
       </div>
       
     );
@@ -241,7 +244,6 @@ const mapStateToProps = state => {
         }
         return {data:[]}
   };
-
 };
 
 

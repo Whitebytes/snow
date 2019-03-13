@@ -16,6 +16,8 @@ import ColorLens from '@material-ui/icons/ColorLens';
 import YoutubeSearch from '@material-ui/icons/YoutubeSearchedFor';
 
 import Chip from '@material-ui/core/Chip';
+import ReactPlayer from 'react-player'
+ 
 
 const styles = theme => ({
     card: {
@@ -31,7 +33,7 @@ const styles = theme => ({
           float: 'left'
       },
     media:{
-        height:50
+        height:150
     }   ,
     toolItemDragging:{
         userSelect: 'none',
@@ -49,7 +51,7 @@ const styles = theme => ({
 const tools=[
     {
         id:1,
-        name:"Thumbnail generator",
+        name:"Thumbnailing",
         state:'ready',
         progress: 100,
         results: 'ok',
@@ -62,7 +64,7 @@ const tools=[
     
     {
         id:3,
-        name:"3D stitching engine",
+        name:"3D stitching",
         state:'ready to stitch',
         progress: 0,
         results: 'waiting',
@@ -90,6 +92,7 @@ const tools=[
         progress: 0,
         results: 'counted:10',
         index: 3,
+        isYT:true,
         icon: <YoutubeSearch />,
         tags: ['sterns found', 'sterns counted'],
         imgUrl:'http://www.welkevogelisdit.nl/sites/default/files/dougallstern1.jpg' 
@@ -112,6 +115,7 @@ const reorder = (list, startIndex, endIndex) => {
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
+  flex:1,
   ...draggableStyle
 });
 
@@ -196,12 +200,12 @@ class App extends Component {
                         }
                         title={item.name}
                         subheader={"state: "+item.state}
-                        ></CardHeader>
+                        ></CardHeader>{item.isYT? <ReactPlayer width="100%" height="200" url='https://www.youtube.com/watch?v=64NoQCeKXuY' playing />:
                          <CardMedia
                             className={classes.media}
                             image={item.imgUrl}
                             title="Paella dish"
-                            />
+                      /> }
                         <CardContent>
                         <Typography >
                             Outputted tags

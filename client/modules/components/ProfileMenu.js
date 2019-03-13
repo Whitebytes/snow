@@ -56,7 +56,7 @@ class ProfileMenu extends React.Component {
     return (
         <div>
             <Badge badgeContent={4}  id="Progress1" color="secondary"  >
-                <Avatar alt="Remy Sharp" src="/static/1.jpg" onClick={this.handleClick}/>
+                <Avatar alt="Remy Sharp" src="/static/Jannes.jpg" onClick={this.handleClick}/>
             </Badge>
 
         <Popper open={open} anchorEl={anchorEl} transition disablePortal  placement="bottom-end" >

@@ -38,6 +38,14 @@ const seeder = {
           email: 'lude@fieldworkcompany.n',
           password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
           avatar: '/static/Lude.jpeg'
+        }),
+        await db .User.create({
+          id: '1223ff59-7a5e-4add-ab7c-981f5e3d3198',
+          firstName: 'Jannes',
+          lastName: 'Heusinkveld',
+          email: 'jannes@fieldworkcompany.n', 
+          password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
+          avatar: '/static/Jannes.jpg'
         })]
       seeder.randomUser = ()=>{
         return seeder.randomElement(seeder.users)
