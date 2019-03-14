@@ -4,7 +4,7 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 import Chip from '@material-ui/core/Chip';
 
 const tagsList = ['thumbnailed','stitched', 'rendered', 
-'mapoverlay','autocolored', 'sterns found', 'sterns counted','hot storage','cold storage','video','nature','drone image',
+'mapoverlay','autocolored', 'geese found', 'geese counted','hot storage','cold storage','video','nature','drone image',
 'high-res','bird project']
  const maxTags = 5;
   function getRandomInt(max) {
@@ -27,7 +27,7 @@ const tagsList = ['thumbnailed','stitched', 'rendered',
 
 const styles = theme => ({
   chip:{
-          margin:3,
+          margin:3, 
           float: 'left',
           background: theme.palette.secondary.light,
       }

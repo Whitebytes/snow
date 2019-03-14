@@ -87,14 +87,14 @@ const tools=[
     },
     {
         id:5,
-        name:"Stern counter",
+        name:"Geese counter",
         state:'ready',
         progress: 0,
         results: 'counted:10',
         index: 3,
         isYT:true,
         icon: <YoutubeSearch />,
-        tags: ['sterns found', 'sterns counted'],
+        tags: ['geese found', 'geese counted'],
         imgUrl:'http://www.welkevogelisdit.nl/sites/default/files/dougallstern1.jpg' 
     }
     

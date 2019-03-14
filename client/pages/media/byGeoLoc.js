@@ -80,7 +80,7 @@ const mapStateToProps = state => {
           loadState:state.buObjects[objName].state, 
           data:state.buObjects[objName].records
         }
-        return {}
+        return {data:[]}
   };
 
 };
