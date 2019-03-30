@@ -12,11 +12,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        appPropeties:  {
-            type: DataTypes.STRING,
+        appProps:  {
+            type: DataTypes.JSON,
             allowNull: false
         }
     });
+    Token.associate = function(models) {
+        Token.belongsTo(models.User, {as: 'owner', foreignKey:'userId'});
+    };
     
     return Token;
 };

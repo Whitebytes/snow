@@ -50,6 +50,9 @@ const resolvers = {
         async fetchUser(_,{ id},{authUser} ) {
             return await User.findById(id);
         },
+        async currUser(_,__,{authUser} ) {
+            return await User.findById(authUser.id);
+        },
         async modules(_,{ id},{authUser} ) {
      
             return await Module.findAll({
@@ -74,12 +77,11 @@ const resolvers = {
     },
     Mutation: {
         // Handles user login
-        async login(_, { email, password }, { res }) {
-            return security.login(email, password, res)
+        async login(_, { email, password, appName, appProps }, { res }) {
+            console.log(res);
+            return security.login(email, password,appName, appProps, res)
         },
-        async logout(a,b,{req, res}) {
-            return await security.logout(res)
-        },
+       
         // Create new user
         async createUser(_, { firstName, lastName, email, password }) {
             return await User.create({
@@ -144,6 +146,6 @@ fs
         Object.assign(resolvers.Query,resolver.query)
     
   });
-
-  
+  var subscriptions = require('./Subscriptions.js');
+  Object.assign(resolvers,subscriptions)
 export default resolvers;

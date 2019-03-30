@@ -47,6 +47,12 @@ const seeder = {
           password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
           avatar: '/static/Jannes.jpg'
         })]
+        db.Token.create({
+          id: 'e78f508c-ead7-47ed-9f17-44e3fd3b945e',
+          userId:'1223ff59-7a5e-4add-ab7c-981f5e3d2237',
+          appName:'graphql',
+          appProps: '{nene:none}'
+        })
       seeder.randomUser = ()=>{
         return seeder.randomElement(seeder.users)
       }

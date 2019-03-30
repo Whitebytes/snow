@@ -4,7 +4,6 @@ import typeDefs from './data/schema';
 import db from './models';
 import security from './util/Security';
 
-
 var cookieParser = require('cookie-parser')
 
 const jwt = require('express-jwt');
@@ -12,7 +11,6 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
-
 
 app.use(cookieParser());
 app.use('/graphql', 
@@ -26,18 +24,24 @@ const server = new ApolloServer({
   playground: {
     settings: {
       'editor.theme': 'dark',
+      'editor.cursorShape': 'line', // possible values: 'line', 'block', 'underline',
       //someday, this is  works, and cookies are being send automaticly by the playground
       //https://github.com/prisma/graphql-playground/pull/836/files/b989c2ed9f974395d0fe3738d67e32fc76ccb2c9
       'request.credentials': 'same-origin' 
     }
   },
-  context: async ({req, res}) => { 
-    return {
-      authUser: req.user,
-      req, 
-      res,
-      db
-    } 
+  context: async ({req, res, connection}) => { 
+    if (connection) {
+      // check connection for metadata
+      return connection.context;
+    } else {
+      return {
+        authUser: req.user,
+        req, 
+        res,
+        db
+      } 
+  }
 }});
 server.applyMiddleware({ app })
 

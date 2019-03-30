@@ -10,7 +10,11 @@ const typeDefs = `
         avatar: String!
         token: String
     }
-    
+    type Token {
+        id: ID!
+        appName: String!
+        appProps: String
+    }
     type MenuItem {
         id: Int!
         name: String!
@@ -53,6 +57,7 @@ const typeDefs = `
 
     type Query {
         allUsers: [User]
+        currUser: User
         queryUsers(clause: String!): [User]
         queryMediaRaw(clause: String!): [MediaRaw]
         allMenuItems:[MenuItem]
@@ -64,9 +69,11 @@ const typeDefs = `
     type Mutation {
         login (
             email: String!,
-            password: String!
+            password: String!,
+            appName:String!,
+            appProps: String!
         ): String
-        logout: String
+        
         createUser (
             firstName: String!,
             lastName: String,
@@ -80,6 +87,13 @@ const typeDefs = `
             email: String!,
             password: String!
         ): User
+    }
+    type Subscription {
+        actionRequest: ActReq
+    }
+    type ActReq {
+        command: String
+        payload: String
     }
 `;
 export default typeDefs;

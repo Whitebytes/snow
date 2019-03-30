@@ -4,9 +4,6 @@ import {loadingStates} from "../redux/states";
 import gql from "graphql-tag";
 import { buo_load, buo_received} from "../redux/actions";
 import apiClient from "../modules/ApiClient"
-import { object } from 'prop-types';
-
-
 
 class BuObjects extends Component{
     componentDidMount(){

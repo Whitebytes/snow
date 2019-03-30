@@ -30,8 +30,8 @@ const model = (sequelize, DataTypes) => {
         }
     });
     User.associate = function(models) {
-        // A user can have many post
-        User.hasMany(models.Token, {as: 'accessTokens', foreignKey:'userId'});
+        // A user can have many tokens
+       // User.hasMany(models.Token, {as: 'accessTokens', foreignKey:'userId'});
     };
     /*User.beforeCreate((user, _ ) => {
         return user.id = uuid(); 
