@@ -1,5 +1,14 @@
-import { TOGGLE_DRAWER, MENU_LOAD , MENU_LOADED, MENU_CLICK, MENU_SELECT, 
-  MODULE_SELECT, GQL_LOAD, GQL_LOADED, BUO_LOAD, BUO_LOADED } from "./actionTypes";
+import { 
+  TOGGLE_DRAWER, 
+  MENU_LOAD , 
+  MENU_LOADED, 
+  MENU_CLICK, 
+  MENU_SELECT, MENU_CHANGED,
+  MODULE_SELECT, 
+  DATA_CHANGED,
+  DATA_SYNCED,
+  BUO_LOAD, 
+  BUO_LOADED } from "./actionTypes";
 
 export const toggleDrawer = () => ({
   type: TOGGLE_DRAWER
@@ -28,23 +37,28 @@ export const moduleSelect = (content) => ({
   payload: content
 });
 
-
-export const gql_load = (content) => ({
-  type: GQL_LOAD
-});
-
-
-export const gql_received = (content) => ({
-  type: GQL_LOADED,
+export const menuChanged = (content) => ({
+  type: MENU_CHANGED,
   payload: content
 });
+
 export const buo_load = (content) => ({
   type: BUO_LOAD,
   payload: content
 });
 
-
 export const buo_received = (content) => ({
   type: BUO_LOADED,
+  payload: content
+});
+
+
+export const data_changed = (content) => ({
+  type: DATA_CHANGED,
+  payload: content
+});
+
+export const data_synced = (content) => ({
+  type: DATA_SYNCED,
   payload: content
 });

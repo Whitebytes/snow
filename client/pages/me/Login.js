@@ -11,20 +11,21 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Router from 'next/router'
 import gql from "graphql-tag";
 import Link from 'next/link';
-import ApiClient  from '../../modules/ApiClient.js';
+import client  from '../../modules/ApiClient.js';
 import Head from 'next/head'
 
-
+const clientInfo = gql('query{clientInfo{hostname,ip, userAgent }}')
 const loginMutation =gql`mutation login(
-    $email: String!, 
-    $password:String!){
-        login(
-            email: $email, 
-            password:$password 
-        )
-    }`
-
-const client = new ApiClient();
+  $email: String!,
+  $password: String!,
+  $appName: String!,
+  $appProps: String!,
+){login(
+  email:$email,
+  password:$password,
+  appName:$appName,
+  appProps:$appProps
+) }`
 
 const styles = theme => ({
   layout: {
@@ -72,10 +73,12 @@ class SignIn extends Component{
         this.state = {
           email: "",
           password: "",
-          error:""
+          error:"",
+          clientInfo: null
         };
-        this.applyNastyFix();
-      
+        client.query({query:clientInfo}).then(({data})=>{
+          this.setState({'clientInfo': data.clientInfo})
+        })
       }
       handleChange = event => {
         this.setState({
@@ -85,38 +88,30 @@ class SignIn extends Component{
       validateForm() {
         return this.state.email.length > 0 && this.state.password.length > 0;
       }
-      applyNastyFix(){
-        //form playground credentials-bug:
-        if (typeof(localStorage)=='undefined')
-          return
-        var playground=localStorage.getItem('graphql-playground')
-        if (playground!=null){
-          var spaces = JSON.parse(playground)
-          var settings =JSON.parse(spaces.settingsString);
-          settings['request.credentials']='same-origin';
-          spaces.settingsString = JSON.stringify(settings);
-          localStorage.setItem('graphql-playground', JSON.stringify(spaces))
-        }
-      }
       handleSubmit = event => {
         event.preventDefault()
         client.mutate({
                 mutation:loginMutation,
                 variables:{
                     email: this.state.email,
-                    password: this.state.password
+                    password: this.state.password,
+                    appName:'Browser',
+                    appProps: JSON.stringify(this.state.clientInfo)
                 }
             })
-            .then(result => {
+            .then(({data}) => {
                 this.setState({error: ''})
-                localStorage.setItem('bearer', result.data.login.token)
+                localStorage.setItem('token', data.login)
                 Router.push(`/`)
             })
             .catch((err) => {
-                if (err.graphQLErrors)
+                if (err.graphQLErrors){
+                    console.log(err.graphQLErrors)
                     this.setState({error: err.graphQLErrors[0].message})
+                }
+
                 else 
-                    this.setState('Sorry, something went wrong terribly wrong')
+                    this.setState({error: 'Sorry, something went wrong terribly wrong'})
             })
       }
    

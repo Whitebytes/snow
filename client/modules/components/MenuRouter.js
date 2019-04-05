@@ -46,9 +46,8 @@ class MenuRouter extends React.Component {
             menu_load();
             apiClient
                 .query({query: moduleList}) 
-                .then((rest) => {
-                    
-                    menu_loaded(rest.data.modules);
+                .then(({data}) => {
+                    menu_loaded(data.modules);
                     this.selectMenu();
             }) 
         } 

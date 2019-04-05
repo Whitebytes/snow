@@ -1,19 +1,30 @@
 import { ApolloClient } from 'apollo-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { ApolloLink, split } from 'apollo-link';
+import fetch from 'node-fetch'
 import { HttpLink } from 'apollo-link-http';
+import WebSocket from 'ws';
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import settings  from './Settings';
+import { setContext } from 'apollo-link-context';
+
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:8000/graphql',
+  uri: 'http://localhost:3000/graphql',
+  fetch: fetch
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:8000/graphql`,
+  uri: `ws://localhost:3000/graphql`,
+  fetch:fetch,
+  webSocketImpl: WebSocket,
   options: {
     reconnect: true,
-  },
+    connectionParams: ()=> ({
+        authorization: settings.get('token')
+    })
+  }
 });
 
 const terminatingLink = split(
@@ -26,13 +37,21 @@ const terminatingLink = split(
   wsLink,
   httpLink,
 );
+const authLink = setContext((_, { headers }) => {
+  var token = settings.get('token');
+  return {
+            headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
 
-const link = ApolloLink.from([terminatingLink]);
+const link = ApolloLink.from([authLink, terminatingLink]);
 
-const cache = new InMemoryCache();
-
-const client = new ApolloClient({
-  link,
-  cache,
+const client = ()=> new ApolloClient({
+  ssrMode: true,
+  link:link,
+  cache: new InMemoryCache()
 });
 export default client;

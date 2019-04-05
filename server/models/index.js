@@ -3,9 +3,13 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
+import resolvers from '../data/resolvers';
 
 var config    = require(__dirname + '/../config/config.js')[env];
 const db = {};
+db['resolvers']  = resolvers
+db['schemas']  =''
+db['queries']  =''
 
 let sequelize;
 if (config.use_env_variable) {
@@ -20,17 +24,35 @@ fs
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(file => {
-
     const model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
 
+  function assign(target, source) { //as Object.assign, but recursive
+    for(var i in source) {
+        if(target[i] != null &&  typeof(target[i])=="object"){
+          target[i] = assign(target[i], source[i]);
+        }
+        else
+          target[i] = source[i];
+    }
+    return target;
+}
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
+  if (db[modelName].resolvers){
+    assign(db['resolvers'],db[modelName].resolvers)
+  }
+  if (db[modelName].gqlType){
+    db['schemas']+='\n'+ db[modelName].gqlType;
+  }
+  if (db[modelName].gqlQuery){
+    db['queries']+='\n'+ db[modelName].gqlQuery;
+  }
 });
-
+console.log('modules loaded');
 const seed = async (db)=>{
   var dirName =__dirname+'/../util/seeds';
   var seedResult={};
@@ -62,4 +84,4 @@ db.sequelize.sync({force: true}).
     }
   }
 */
-module.exports = db;
+module.exports= db;

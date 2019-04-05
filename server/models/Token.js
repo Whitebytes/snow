@@ -15,11 +15,20 @@ module.exports = (sequelize, DataTypes) => {
         appProps:  {
             type: DataTypes.JSON,
             allowNull: false
-        }
+        },
+        active:{
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
     });
     Token.associate = function(models) {
         Token.belongsTo(models.User, {as: 'owner', foreignKey:'userId'});
     };
+    Token.gqlType=`type Token {
+        id: ID!
+        appName: String!
+        appProps: String
+    }`
     
     return Token;
 };

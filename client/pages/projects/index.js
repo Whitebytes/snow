@@ -37,9 +37,7 @@ class index extends React.Component {
 }
 
 const mapStateToProps = state => {
-
-  return (state) => { 
-      console.log(state)
+ return (state) => { 
       if (state.buObjects.queryProjects)
         return {
           loadState:state.buObjects.queryProjects.state, 

@@ -26,7 +26,16 @@ const model = (sequelize, DataTypes) => {
         MenuItem.hasMany(models.MenuItem, {as: 'subMenus', foreignKey:'parentId'});
         MenuItem.belongsTo(models.Module, {as: 'module', foreignKey:'moduleId'});
     };
-
+    MenuItem.gqlType=`type MenuItem {
+        id: Int!
+        name: String!
+        url: String!
+        icon: String!
+        parentId: Int!
+        createdAt: DateTime! # will be generated
+        updatedAt: DateTime! # will be generated
+    }`
+    MenuItem.gqlQuery=`allMenuItems:[MenuItem]`
     return MenuItem;
 };
 export default model;

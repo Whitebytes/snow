@@ -11,10 +11,11 @@ const clientPort = parseInt(process.env.clientPort, 10) || 3001
 
 const devProxy = {
     '/graphql': {
-      target: baseURL + ':' + apiPort + '/graphql/',
-      pathRewrite: {'^/api': '/'},
-      changeOrigin: true
-    }
+      target: baseURL + ':' + apiPort + '/graphql',
+      changeOrigin: true,
+      prependPath: false,
+      ws:true
+    } 
   }
 
 

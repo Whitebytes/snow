@@ -1,0 +1,13 @@
+diff --git a/node_modules/apollo-server-core/src/ApolloServer.ts b/node_modules/apollo-server-core/src/ApolloServer.ts
+index cfed6b7..31db13f 100644
+--- a/node_modules/apollo-server-core/src/ApolloServer.ts
++++ b/node_modules/apollo-server-core/src/ApolloServer.ts
+@@ -338,7 +338,7 @@ export class ApolloServerBase {
+             })[0];
+           }
+ 
+-          return { ...connection, context };
++          return { ...connection, context: { ...connection.context, ...context } };
+         },
+         keepAlive,
+       },

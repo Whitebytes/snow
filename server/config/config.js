@@ -9,7 +9,7 @@ module.exports = {
         "host": process.env.DB_HOST,
         "port" :  process.env.POSTGRES_PORT,
         "dialect": "postgres",
-        "logging": true
+        "logging": false
     },
     "production": {
         "username": process.env.DB_USERNAME,

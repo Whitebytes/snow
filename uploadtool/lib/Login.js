@@ -37,12 +37,8 @@ export default  async () => {
       type: 'input',
       message: 'Enter your e-mail address:',
       validate: function( value ) {
-        if (value.length) {
-          return true;
-        } else {
-          return 'Please enter your e-mail address.';
-        }
-      }
+      return true;
+     }
     },
     {
       name: 'password',
@@ -65,7 +61,7 @@ export default  async () => {
     
     user = await apiClient
       .mutate({mutation: gql(query), variables:{
-        email: credits.username,
+        email: credits.username ||'geertjan@whitebytes.nl',
         password: credits.password,
         appName: 'CLI',
         appProps: JSON.stringify({

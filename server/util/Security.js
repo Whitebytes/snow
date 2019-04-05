@@ -1,19 +1,14 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User, Token, Tag } = require('../models');
+const { User, Token } = require('../models');
 const uuid = require('uuid/v4'); // ES5
 
 class Security{
     static syncAuth(){
         //api handles jwt tokens in cookies and in headers, here they are syncetd
         return async function(req, res, next) {
-           
-            if (req.cookies['Authorization'] 
-                && req.cookies['Authorization'].startsWith('Bearer')){
-                req.headers['authorization']=req.cookies['Authorization']
-            }
-            if (req.get('Authorization')){
+           if (req.get('Authorization')){
                 var token = req.get('Authorization');
                 res.cookie('Authorization',token, { maxAge: 900000, httpOnly: true })
                 token=token.substring(7);
@@ -24,12 +19,18 @@ class Security{
                         req.user = await dbToken.getOwner();
                 } catch(err){console.log(err)}
             }
-            else
-                res.clearCookie('Authorization')
-            //process.stdout.write('\x1B[2J\x1B[0f');
-            console.log(res)
             next()
         }
+    }
+    static async validateToken(token){
+        try{
+            var jwtInfo = jwt.verify(token, process.env.JWT_SECRET);
+            var dbToken = await Token.findOne({ where: { id: jwtInfo.id } })
+            if (dbToken){
+                return dbToken
+            }
+        } catch(err){console.log(err)}
+        throw new Error("Invalid or expired token")
     }
 
     static async login(email, password, appName, appProps, res){
@@ -47,7 +48,8 @@ class Security{
             id :uuid(),
             userId: user.id,
             appName, 
-            appProps
+            appProps,
+            active: false
         });
         user.token = await jwt.sign({
             id: token.id,

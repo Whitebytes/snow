@@ -45,7 +45,40 @@ module.exports = (sequelize, DataTypes) => {
         //     foreignKey: 'mediaId'
         //   });
     };
- 
+    MediaRaw.gqlType=`type MediaRaw {
+        id:  ID!
+        name: String!
+        type: String!
+        connectorId: String!
+        blobRef: String!
+        userOwner: User!
+        props: String!,
+        project: Project!
+        createdAt: String!,
+        labels:String
+    }`
+    MediaRaw.gqlQuery =`queryMediaRaw(clause: String!): [MediaRaw]`
+    MediaRaw.resolvers={
+        Query: {
+            async queryMediaRaw(_,{clause}) {
+                var res= await MediaRaw.findAll({
+                    include: [{
+                        all: true, 
+                        nested: true
+                    }],
+                    order: [
+                         ['createdAt', 'ASC']
+                    ],
+                    where: JSON.parse(clause)}).map(item =>{
+                        return {
+                            ...item.dataValues,
+                            props:JSON.stringify(item.props)
+                    }
+                })
+                return res;
+            }
+        }
+    }
     return MediaRaw;
 };
 /* Sample data 

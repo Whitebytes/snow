@@ -25,8 +25,6 @@ class BuObjects extends Component{
                     records: rest.data[tableName]});
             })
         }
-    
-
     render() {  
         const { children,...props } = this.props;
         return children;

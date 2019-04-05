@@ -1,116 +1,38 @@
 'use strict';
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const { User, Module, MediaRaw, Project} = require('../models');
-const bcrypt = require('bcrypt');
-const fs = require('fs');
-
+const {REQ_ACTION, pubsub} = require('./Subscriptions');
+const {withFilter} = require('apollo-server-express');
 require('dotenv').config();
-import security from '../util/Security';
-
-const mapType =(type)=>{
-
-}
-function readOnly(target, key, descriptor){
-    descriptor.writable=false;
-    return descriptor;
-}
-
 // Define resolvers
 const resolvers = {
     Query: {
-        // Fetch all users
-        async allUsers(_,{ctx}) {
-            return await User.all();
-        },
-        async queryUsers(_,{clause}) {
-            return await User.findAll({
-                where: JSON.parse(clause)
-            })
-        },
-        async queryMediaRaw(_,{clause}) {
-            var res= await MediaRaw.findAll({
-                include: [{
-                    all: true, 
-                    nested: true
-                }],
-                order: [
-                    // Will escape title and validate DESC against a list of valid direction parameters
-                    ['createdAt', 'ASC']
-                ],
-                where: JSON.parse(clause)}).map(item =>{
-                    return {
-                        ...item.dataValues,
-                        props:JSON.stringify(item.props)
-                }
-            })
-            return res;
-        },
-        // Get a user by it ID
-        async fetchUser(_,{ id},{authUser} ) {
-            return await User.findById(id);
-        },
-        async currUser(_,__,{authUser} ) {
-            return await User.findById(authUser.id);
-        },
-        async modules(_,{ id},{authUser} ) {
-     
-            return await Module.findAll({
-                include: [{
-                    all: true, 
-                    nested: true
-                }],
-                order: [
-                    // Will escape title and validate DESC against a list of valid direction parameters
-                    ['id', 'ASC'],
-                    ['menuItems','id', 'ASC']
-                ]
-                
-              })
-        },
-        async queryProjects(_,{clause}) {
-            return await Project.findAll({include: [{
-                all: true, 
-                nested: false
-            }],where: JSON.parse(clause)})
-        },
+        clientInfo: (_, __, { req }) =>{
+            return {
+                hostname: req.hostname,
+                userAgent: req.get('User-Agent'),
+                ip: req.ip
+            }
+        }
     },
     Mutation: {
-        // Handles user login
-        async login(_, { email, password, appName, appProps }, { res }) {
-            console.log(res);
-            return security.login(email, password,appName, appProps, res)
-        },
-       
-        // Create new user
-        async createUser(_, { firstName, lastName, email, password }) {
-            return await User.create({
-                firstName,
-                lastName,
-                email,
-                password: await bcrypt.hash(password, 10)
-            });
-        },
-        // Update a particular user
-        async updateUser(_, { id, firstName, lastName, email, password }, { authUser }) {
-            // Make sure user is logged in
-            if (!authUser) {
-                throw new Error('You must log in to continue!')
-            }
-            // fetch the user by it ID
-            const user = await User.findById(id);
-            // Update the user
-            await user.update({
-                firstName,
-                lastName,
-                email,
-                password: await bcrypt.hash(password, 10)
-            });
-            return user;
-        },
-       
+         login(_, { email, password, appName, appProps }, { res }) {
+            var security = require('../util/Security').default;
+            return  security.login(email, password,appName, appProps, res)
+        }
     },
-   
+    Subscription: {
+        actionRequest: {
+            // Additional event labels can be passed to asyncIterator creation
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(REQ_ACTION),
+                (payload, _, ctx) => {
+                   /// console.log(ctx.user)
+                  return true;
+                },
+              ),
+        }
+    },
     DateTime: new GraphQLScalarType({
         name: 'DateTime',
         description: 'DateTime type',
@@ -133,19 +55,4 @@ const resolvers = {
     })
 }
 
-fs
-  .readdirSync(__dirname+'/../models')
-  .filter(file => {
-    return (file.indexOf('.') !== 0) 
-    && (file !== 'index.js') 
-    && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    var resolver = require(__dirname+'/../models/'+file);
-    if(resolver.query)
-        Object.assign(resolvers.Query,resolver.query)
-    
-  });
-  var subscriptions = require('./Subscriptions.js');
-  Object.assign(resolvers,subscriptions)
 export default resolvers;

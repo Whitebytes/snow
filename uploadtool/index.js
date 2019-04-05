@@ -3,6 +3,7 @@ const path = require('path');
 import login  from './lib/Login';
 import settings  from './lib/Settings';
 import client  from './lib/Subscriptions';
+import gql from "graphql-tag";
 
 const chalk       = require('chalk');
 const clear       = require('clear');
@@ -20,10 +21,19 @@ const run = async () => {
   settings.load()
     await login().then((user)=>{
       console.log(`Welcome back ${user.firstName}!`)
+       client().subscribe({
+        query: gql`subscription{actionRequest{command, payload	}}`,
+        variables: {}
+      }).subscribe({
+        next (data) {
+          console.log(data)
+        },
+        error(err) { console.error('err', err); },
+      });
     });
-
+    var rootDir =  process.cwd()+'/temp'; 
+ 
     
-    var rootDir =  process.cwd()+'/temp';
   //  files.fileTree(function (res) {
   //    console.log('asd',JSON.stringify(res));
   //  }, rootDir);
