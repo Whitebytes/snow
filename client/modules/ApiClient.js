@@ -6,12 +6,7 @@ import { ApolloLink, split } from 'apollo-link';
 import { setContext } from 'apollo-link-context';
 import { getMainDefinition } from 'apollo-utilities'
 import fetch from 'node-fetch';
-import gql from "graphql-tag";
-import {  menuChanged, menu_loaded } from "../redux/actions";
-import Router from 'next/router'
 
-const userQ='query{currUser{firstName, lastName}}'
-const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon, url}}}`
 
 const uri = process.browser  ? window.location.origin + '/graphql' :''
 
@@ -69,35 +64,7 @@ var client =  new ApolloClient({
     defaultOptions: defaultOptions
 });
 
-client
-  .query({
-    query: gql(userQ),
-    fetchPolicy: 'no-cache'
-  }).then(({data, errors}) => {
-    if (errors)
-      Router.push('/me/Login')
-  }).catch((error)=>{
-    Router.push('/me/Login')
-  })
+
   
-client.subscribe({
-    query: gql`subscription{actionRequest{command, payload	}}`,
-    variables: {}
-  }).subscribe({
-    next ({data}) {
-      if (data.actionRequest){
-          menuChanged();
-          client
-              .query({
-                query: moduleList,
-                fetchPolicy: 'no-cache'
-              }) 
-              .then(({data}) => {
-                menu_loaded(data.modules);
-          }) 
-      }
-    },
-    error(err) { console.error('err', err); },
-  });
 
 export default client;

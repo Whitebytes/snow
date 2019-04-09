@@ -51,7 +51,7 @@ const seeder = {
           id: 'e78f508c-ead7-47ed-9f17-44e3fd3b945e',
           userId:'1223ff59-7a5e-4add-ab7c-981f5e3d2237',
           appName:'graphql',
-          appProps: '{nene:none}',
+          appProps: '{"hostname":"webPC}',
           active: false
         })
       seeder.randomUser = ()=>{

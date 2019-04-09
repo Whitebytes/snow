@@ -44,9 +44,9 @@ class ModuleMenu extends Component{
       outSync:false
     }
     componentDidMount(){
-      router.events.on('routeChangeComplete', (url) => {
-        this.setState({outSync: false})
-      })
+      // router.events.on('routeChangeComplete', (url) => {
+      //   this.setState({outSync: false})
+      // })
     }
 
     render() {

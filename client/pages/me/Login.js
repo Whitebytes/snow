@@ -13,6 +13,11 @@ import gql from "graphql-tag";
 import Link from 'next/link';
 import client  from '../../modules/ApiClient.js';
 import Head from 'next/head'
+import { loadMenu } from '../../modules/components/MenuRouter.js';
+
+import { connect } from "react-redux";
+import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";
+import { logonStates } from "../../redux/states";
 
 const clientInfo = gql('query{clientInfo{hostname,ip, userAgent }}')
 const loginMutation =gql`mutation login(
@@ -90,6 +95,7 @@ class SignIn extends Component{
       }
       handleSubmit = event => {
         event.preventDefault()
+        this.props.logon()
         client.mutate({
                 mutation:loginMutation,
                 variables:{
@@ -102,7 +108,9 @@ class SignIn extends Component{
             .then(({data}) => {
                 this.setState({error: ''})
                 localStorage.setItem('token', data.login)
+                this.props.loggedon()
                 Router.push(`/`)
+                loadMenu(); //reload because of connected client
             })
             .catch((err) => {
                 if (err.graphQLErrors){
@@ -182,5 +190,15 @@ class SignIn extends Component{
 SignIn.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+const mapStateToProps = state => {
+  return { 
+    logonState: state.logon.logonState,
+    currUser: state.logon.currUser
+  };
+};
 
-export default withStyles(styles)(SignIn);
+
+export default connect(
+  mapStateToProps,
+  {logon, loggedon, connected, logoff, loggedoff}
+)(withStyles(styles)(SignIn));

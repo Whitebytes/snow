@@ -1,4 +1,5 @@
 const inquirer   = require('inquirer');
+const os   = require('os');
 import settings  from './Settings';
 import apiClient from "./ApiClient"
 import gql from "graphql-tag";
@@ -65,7 +66,7 @@ export default  async () => {
         password: credits.password,
         appName: 'CLI',
         appProps: JSON.stringify({
-          hostName:'localPC'
+          hostname: os.hostname()
         })
       }}) 
       .then((rest) => {

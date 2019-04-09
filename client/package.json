@@ -17,6 +17,7 @@
     "graphql": "^14.0.2",
     "http-proxy-middleware": "^0.19.0",
     "jss": "latest",
+    "material-table": "^1.30.0",
     "next": "latest",
     "nprogress": "^0.2.0",
     "points-cluster": "^0.1.4",

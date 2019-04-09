@@ -22,7 +22,7 @@ const run = async () => {
     await login().then((user)=>{
       console.log(`Welcome back ${user.firstName}!`)
        client().subscribe({
-        query: gql`subscription{actionRequest{command, payload	}}`,
+        query: gql`subscription{actionRequest{type, payload, receiver	}}`,
         variables: {}
       }).subscribe({
         next (data) {
@@ -34,9 +34,10 @@ const run = async () => {
     var rootDir =  process.cwd()+'/temp'; 
  
     
-  //  files.fileTree(function (res) {
-  //    console.log('asd',JSON.stringify(res));
-  //  }, rootDir);
+   files.fileTree(function (res) {
+    settings.set('filetree',res);
+    settings.save();
+   }, rootDir);
  }
   
 run();

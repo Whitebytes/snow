@@ -43,7 +43,9 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
   if (db[modelName].resolvers){
-    assign(db['resolvers'],db[modelName].resolvers)
+    let resolve = (typeof(db[modelName].resolvers)=='function') ?
+      db[modelName].resolvers(db) : db[modelName].resolvers;
+    assign(db['resolvers'],resolve)
   }
   if (db[modelName].gqlType){
     db['schemas']+='\n'+ db[modelName].gqlType;

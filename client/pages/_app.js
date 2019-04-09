@@ -10,6 +10,7 @@ import withReduxStore from '../redux/withReduxStore'
 import NProgress from 'nprogress'
 import Router from 'next/router'
 import MenuRouter from '../modules/components/MenuRouter'
+import ServerConnect from '../modules/components/ServerConnect'
 
 Router.events.on('routeChangeStart', url => {
   NProgress.start()
@@ -38,6 +39,7 @@ class MyApp extends App {
     return (
 
       <Provider store={store}>
+      <ServerConnect>
       <MenuRouter>
       <Container>
         {/* Wrap every page in Jss and Theme providers */}
@@ -60,6 +62,7 @@ class MyApp extends App {
         </JssProvider>
       </Container>
       </MenuRouter>
+      </ServerConnect>
       </Provider>
     );
   }

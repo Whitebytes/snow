@@ -1,13 +1,24 @@
 import React from 'react';
 import { connect } from "react-redux";
 import Router from 'next/router'
-import { menuSelect, moduleSelect, menu_load, menu_loaded } from "../../redux/actions";
+import { menuSelect, moduleSelect, menu_load, menu_loaded, menuChanged } from "../../redux/actions";
 import { loadingStates } from "../../redux/states";
 import apiClient from "../ApiClient"
-
+import store from "../../redux/store";
 import gql from "graphql-tag";
 const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon, url}}}`
 
+export const loadMenu = ()=>{
+    store.dispatch(menuChanged());
+    apiClient
+        .query({
+          query: moduleList,
+          fetchPolicy: 'no-cache'
+        }) 
+        .then(({data}) => {
+          store.dispatch(menu_loaded(data.modules))
+    }) 
+}
 class MenuRouter extends React.Component {
     selectMenu(){
         const {modules} = this.props;
@@ -43,13 +54,7 @@ class MenuRouter extends React.Component {
         })
  
         if (menuState==loadingStates.UNLOADED){
-            menu_load();
-            apiClient
-                .query({query: moduleList}) 
-                .then(({data}) => {
-                    menu_loaded(data.modules);
-                    this.selectMenu();
-            }) 
+            loadMenu();
         } 
     }
     render() {

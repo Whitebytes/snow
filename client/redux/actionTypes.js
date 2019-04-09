@@ -13,3 +13,10 @@ export const BUO_LOADED = "BUO_LOADED";
 
 export const DATA_CHANGED = "DATA_CHANGED";
 export const DATA_SYNCED = "DATA_SYNCED";
+
+export const LOGON = "LOGON";
+export const LOGGEDON = "LOGGEDON";
+export const CONNECTED = "CONNECTED";
+export const LOGOFF = "LOGOFF";
+export const LOGGEDOFF = "LOGGEDOFF";
+

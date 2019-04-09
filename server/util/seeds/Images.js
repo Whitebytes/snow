@@ -35,7 +35,7 @@ const listBlobs = async () => {
 
 const seeder = {};
 seeder.apply = async (db, prevSeeds)=>{
-  return prevSeeds;
+ // return prevSeeds; //temp!!
   var connector = await db.Connector.create({
       id:uuid(),
       name:'Azure',

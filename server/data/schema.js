@@ -14,7 +14,11 @@ const typeDefs = ({queries, schemas}) => `
             appName:String!,
             appProps: String!
         ): String
-        
+        publish (
+            receiver: String, 
+            type: String!
+            payload: String 
+        ): ActReq
         createUser (
             firstName: String!,
             lastName: String,
@@ -38,9 +42,12 @@ const typeDefs = ({queries, schemas}) => `
         userAgent: String!
     }
     type ActReq {
-        command: String
+        type: String
         payload: String
+        receiver: String
+        userId: String!
     }
+    
     ${schemas}
 `;
 export default typeDefs;

@@ -59,6 +59,7 @@ class MuBreadCrumbs extends React.Component {
               module.mainItem = item
           })
       })
+      
       if (!currMod)
       return '';
 
@@ -75,7 +76,7 @@ class MuBreadCrumbs extends React.Component {
               </Avatar>
             }
           />
-          <StyledBreadcrumb
+          {currMod.mainItem ? <StyledBreadcrumb
             component="a"
             href={currMod.mainItem.url}
             label={currMod.name}
@@ -84,7 +85,7 @@ class MuBreadCrumbs extends React.Component {
                  <ModuleIcon path={currMod.icon} />
               </Avatar>
             }
-          />
+          /> :''}
       
           { ( currMenu && currMenu != currMod.mainItem) ?  <StyledBreadcrumb
             label={currMenu.name}

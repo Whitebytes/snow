@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import  { Component } from 'react'
 import { connect } from "react-redux";
-import {loadingStates} from "../redux/states"; 
+ 
 import gql from "graphql-tag";
 import { buo_load, buo_received} from "../redux/actions";
 import apiClient from "../modules/ApiClient"

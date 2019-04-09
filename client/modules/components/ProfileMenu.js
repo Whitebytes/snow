@@ -9,11 +9,16 @@ import Paper from '@material-ui/core/Paper';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import LockOpen from '@material-ui/icons/LockOpen';
-import DraftsIcon from '@material-ui/icons/Drafts';
+
 import FaceIcon from '@material-ui/icons/Face';
 import Popper from '@material-ui/core/Popper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
+
+import { connect } from "react-redux";
+import Router from 'next/router'
+import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";
+import { logonStates } from "../../redux/states";
 
 const styles = theme => ({
     menuItem: {
@@ -45,9 +50,13 @@ class ProfileMenu extends React.Component {
       };
 
       handleClose = event => {
-        
         this.setState({ open: false });
       };
+      logoff = ()=>{
+        localStorage.setItem('token',null);
+        this.props.loggedoff();
+        
+      }
 
   render(){
       const {classes} = this.props;
@@ -75,7 +84,7 @@ class ProfileMenu extends React.Component {
                         </ListItemIcon>
                         <ListItemText classes={{ primary: classes.primary }} inset primary="Profile settings" />
                         </MenuItem>
-                        <MenuItem className={classes.menuItem}>
+                        <MenuItem className={classes.menuItem} onClick={this.logoff} >
                         <ListItemIcon className={classes.icon}>
                             <LockOpen />
                         </ListItemIcon>
@@ -92,5 +101,15 @@ class ProfileMenu extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return { 
+    logonState: state.logon.logonState,
+    currUser: state.logon.currUser
+  };
+};
 
-export default  withStyles(styles)(ProfileMenu);
+
+export default connect(
+  mapStateToProps,
+  {logon, loggedon, connected, logoff, loggedoff}
+)(withStyles(styles)(ProfileMenu));

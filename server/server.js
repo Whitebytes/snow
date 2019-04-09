@@ -8,8 +8,6 @@ const {REQ_ACTION, pubsub} = require('./data/Subscriptions');
 import http from 'http';
 
 var cookieParser = require('cookie-parser')
-
-const jwt = require('express-jwt');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -41,8 +39,21 @@ const server = new ApolloServer({
         webSocket.user =  await webSocket.token.getOwner();
         webSocket.token.update({active:true});
       if (webSocket.user)
+        //ready to send
+         // setTimeout(()=>{
+            pubsub.publish(REQ_ACTION, {
+              actionRequest: { 
+                type:"clientConnect", 
+                userId: webSocket.user.id,
+                payload: JSON.stringify({
+                    token: webSocket.token
+              }) },
+            });
+        //  },100)
+    
           return {
-            user: webSocket.user
+            user: webSocket.user,
+            token: webSocket.token
           }
       }
       throw new Error('Missing or invalid credentials!');
@@ -50,6 +61,16 @@ const server = new ApolloServer({
     onDisconnect:async (webSocket, context) => {
       if (webSocket.token)
         webSocket.token.update({active:false})
+      if (webSocket.user)
+      //ready to send
+        pubsub.publish(REQ_ACTION, {
+          actionRequest: { 
+            type:"clientDisconnect", 
+            userId: webSocket.user.id,
+            payload: JSON.stringify({
+                token: webSocket.token
+          }) },
+        });
     },
   },
   context: async ({req, res, connection}) => { 
@@ -95,12 +116,3 @@ httpServer.listen(port, () => {
 })
 
 
-let id = 2;
-
-setInterval(() => {
-  pubsub.publish(REQ_ACTION, {
-    actionRequest: { command: id.toString(), payload: new Date().toString() },
-  });
-
-  id++;
-}, 1000);

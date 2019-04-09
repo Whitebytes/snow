@@ -8,7 +8,10 @@ import {
   DATA_CHANGED,
   DATA_SYNCED,
   BUO_LOAD, 
-  BUO_LOADED } from "./actionTypes";
+  BUO_LOADED,
+
+  LOGON, LOGGEDON, CONNECTED, LOGOFF, LOGGEDOFF
+} from "./actionTypes";
 
 export const toggleDrawer = () => ({
   type: TOGGLE_DRAWER
@@ -61,4 +64,22 @@ export const data_changed = (content) => ({
 export const data_synced = (content) => ({
   type: DATA_SYNCED,
   payload: content
+});
+
+export const logon = () => ({
+  type: LOGON
+});
+
+export const loggedon = (content) => ({
+  type: LOGGEDON,
+  payload: content
+});
+export const connected = (content) => ({
+  type: CONNECTED
+});
+export const logoff = (content) => ({
+  type: LOGOFF
+});
+export const loggedoff = (content) => ({
+  type: LOGGEDOFF
 });

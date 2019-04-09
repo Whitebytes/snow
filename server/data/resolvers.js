@@ -3,6 +3,7 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const {REQ_ACTION, pubsub} = require('./Subscriptions');
 const {withFilter} = require('apollo-server-express');
+
 require('dotenv').config();
 // Define resolvers
 const resolvers = {
@@ -13,12 +14,28 @@ const resolvers = {
                 userAgent: req.get('User-Agent'),
                 ip: req.ip
             }
-        }
+        },
+        
+        
     },
     Mutation: {
-         login(_, { email, password, appName, appProps }, { res }) {
+        login(_, { email, password, appName, appProps }, { res }) {
             var security = require('../util/Security').default;
-            return  security.login(email, password,appName, appProps, res)
+            return security.login(email, password,appName, appProps, res)
+
+        },
+        publish: (_, { receiver, type, payload }, { req }) =>{
+            let actReq =  { 
+                type: type, 
+                userId: req.user.id,
+                receiver: receiver,
+                payload: payload
+            }
+            pubsub.publish(REQ_ACTION, {
+                actionRequest:actReq,
+                receiver: receiver
+            });
+            return actReq;
         }
     },
     Subscription: {
@@ -27,8 +44,10 @@ const resolvers = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(REQ_ACTION),
                 (payload, _, ctx) => {
-                   /// console.log(ctx.user)
-                  return true;
+                    if (payload.receiver){
+                       return ctx.token.id==payload.receiver;
+                    }
+                    return ctx.user.userId==payload.userId
                 },
               ),
         }

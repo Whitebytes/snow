@@ -3,4 +3,10 @@ const loadingStates = {
     'LOADING':'LOADING', 
     'LOADED': 'LOADED'};
 
-export {loadingStates}
+const logonStates = {
+        'LOGGEDOFF':'LOGGEDOFF',
+        'LOGGINGON':'LOGGINGON', 
+        'LOGGEDON': 'LOGGEDON',
+        'ONLINE': 'ONLINE'
+    };
+export {loadingStates, logonStates}
