@@ -10,7 +10,6 @@
     "docker:stop": "docker-compose stop",
     "docker:down": "docker-compose down",
     "prepare": "patch-package"
-    
   },
   "keywords": [],
   "author": "",
@@ -41,5 +40,4 @@
     "babel-cli": "^6.26.0",
     "babel-preset-stage-3": "^6.24.1"
   }
-  
 }
