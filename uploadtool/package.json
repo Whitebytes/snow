@@ -13,6 +13,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
     "clear": "^0.1.0",
+    "dotenv": "^7.0.0",
     "figlet": "^1.2.1",
     "graphql": "^14.2.0",
     "inquirer": "^6.2.2",
@@ -23,11 +24,13 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-stage-3": "^6.24.1"
+    "babel-preset-stage-3": "^6.24.1",
+    "terser": "^3.14.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   },
   "scripts": {
-    "start": "nodemon --no-stdin --exec babel-node index.js",
-    "tool": "babel-node index.js"
+    "tool": "babel-node src/index.js"
   },
   "repository": {
     "type": "git",

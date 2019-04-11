@@ -16,9 +16,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 
 import { connect } from "react-redux";
-import Router from 'next/router'
 import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";
-import { logonStates } from "../../redux/states";
+
 
 const styles = theme => ({
     menuItem: {

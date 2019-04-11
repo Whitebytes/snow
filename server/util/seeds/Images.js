@@ -4,7 +4,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 const uuid = require('uuid/v4'); // ES5
 const storage = require('azure-storage');
-
 const blobService = storage.createBlobService();
 const groningen = { lat: 53.2217873, lng: 6.4956536 }; 
 
@@ -37,7 +36,7 @@ const seeder = {};
 seeder.apply = async (db, prevSeeds)=>{
  // return prevSeeds; //temp!!
   var connector = await db.Connector.create({
-      id:uuid(),
+      id:'43bbeedf-fa40-4989-8e13-16c40815f5b0',
       name:'Azure',
       props:{}
     })
@@ -66,6 +65,7 @@ seeder.apply = async (db, prevSeeds)=>{
           projectId: project.id,
           createdAt: item.createdAt,
           labels: JSON.stringify(item.labels),
+          size:0,
           blobRef: `https://whitebytes.blob.core.windows.net/${containerName}/${item.id}`,
           props:{
             lat: item.lat,

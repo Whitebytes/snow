@@ -54,6 +54,22 @@ const seeder = {
           appProps: '{"hostname":"webPC}',
           active: false
         })
+        db.Token.create({
+          id: 'e1ee417e-78ce-4f04-9446-9a9de41070ef',
+          userId:'1223ff59-7a5e-4add-ab7c-981f5e3d2237',
+          appName:'browser',
+          appProps: '{"hostname":"webPC"}',
+          active: false
+        })
+        db.Token.create({
+          id: '03ff1d8a-18af-4bbf-9618-6424effccd53',
+          userId:'1223ff59-7a5e-4add-ab7c-981f5e3d2237',
+          appName:'browser',
+          appProps: '{"hostname":"geertjan-VirtualBox"}',
+          active: false
+        })
+        
+        
       seeder.randomUser = ()=>{
         return seeder.randomElement(seeder.users)
       }

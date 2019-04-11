@@ -1,11 +1,11 @@
 import { ApolloServer, gql } from 'apollo-server-express';
 
 import typeDefs from './data/schema';
-import {db, resolvers, schemas, queries} from './models';
+import {db, resolvers, schemas, queries, mutations} from './models';
 
 import security from './util/Security';
-const {REQ_ACTION, pubsub} = require('./data/Subscriptions');
 import http from 'http';
+
 
 var cookieParser = require('cookie-parser')
 const express = require('express');
@@ -18,7 +18,7 @@ app.use('/graphql',
   bodyParser.json(),
   security.syncAuth()
 );
-let allSchema = typeDefs({schemas, queries});
+let allSchema = typeDefs({schemas, queries, mutations});
 
 const server = new ApolloServer({
   typeDefs: allSchema,
@@ -39,22 +39,17 @@ const server = new ApolloServer({
         webSocket.user =  await webSocket.token.getOwner();
         webSocket.token.update({active:true});
       if (webSocket.user)
-        //ready to send
-         // setTimeout(()=>{
-            pubsub.publish(REQ_ACTION, {
-              actionRequest: { 
-                type:"clientConnect", 
-                userId: webSocket.user.id,
-                payload: JSON.stringify({
-                    token: webSocket.token
-              }) },
-            });
-        //  },100)
-    
-          return {
-            user: webSocket.user,
-            token: webSocket.token
-          }
+        resolvers.Mutation.publish(null,{ 
+          type:"clientConnect", 
+          payload: JSON.stringify({
+              token: webSocket.token
+          })
+        },{req:webSocket})
+      
+        return {
+          user: webSocket.user,
+          token: webSocket.token
+        }
       }
       throw new Error('Missing or invalid credentials!');
     },
@@ -63,14 +58,12 @@ const server = new ApolloServer({
         webSocket.token.update({active:false})
       if (webSocket.user)
       //ready to send
-        pubsub.publish(REQ_ACTION, {
-          actionRequest: { 
+      resolvers.Mutation.publish(null,{ 
             type:"clientDisconnect", 
-            userId: webSocket.user.id,
             payload: JSON.stringify({
                 token: webSocket.token
-          }) },
-        });
+          })
+        },{req:webSocket})
     },
   },
   context: async ({req, res, connection}) => { 

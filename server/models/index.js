@@ -10,7 +10,7 @@ const db = {};
 db['resolvers']  = resolvers
 db['schemas']  =''
 db['queries']  =''
-
+db['mutations']=''
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -52,6 +52,9 @@ Object.keys(db).forEach(modelName => {
   }
   if (db[modelName].gqlQuery){
     db['queries']+='\n'+ db[modelName].gqlQuery;
+  }
+  if (db[modelName].gqlMutation){
+    db['mutations']+='\n'+ db[modelName].gqlMutation;
   }
 });
 console.log('modules loaded');

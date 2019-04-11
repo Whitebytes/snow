@@ -72,6 +72,6 @@ typings/
 # Serverless directories
 .serverless
 server/.env
-
+*/dist/
 
 temp/

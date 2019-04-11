@@ -3,7 +3,7 @@ import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import ProjectCard from '../../modules/projects/ProjectCard';
 import BuObjects from '../../data/BuObjects';
-import FileList from '../../modules/components/FileList';
+import FileList from '../../modules/clients/FileList';
 
 import { connect } from "react-redux";
 
@@ -11,6 +11,7 @@ class client extends React.Component {
   static getInitialProps({query}) {
     return {...query, ...this.props}
   }
+
 
   render() {
     

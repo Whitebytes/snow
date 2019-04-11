@@ -6,6 +6,7 @@ const {withFilter} = require('apollo-server-express');
 
 require('dotenv').config();
 // Define resolvers
+let msgCnt=0;
 const resolvers = {
     Query: {
         clientInfo: (_, __, { req }) =>{
@@ -14,9 +15,7 @@ const resolvers = {
                 userAgent: req.get('User-Agent'),
                 ip: req.ip
             }
-        },
-        
-        
+        }, 
     },
     Mutation: {
         login(_, { email, password, appName, appProps }, { res }) {
@@ -24,17 +23,21 @@ const resolvers = {
             return security.login(email, password,appName, appProps, res)
 
         },
-        publish: (_, { receiver, type, payload }, { req }) =>{
+        publish: (_, args, { req }) =>{
+            let {receiver, ...rest} = args;
             let actReq =  { 
-                type: type, 
                 userId: req.user.id,
-                receiver: receiver,
-                payload: payload
+                sender: req.token.id,
+                id: msgCnt++,
+                ...rest
             }
+      
             pubsub.publish(REQ_ACTION, {
                 actionRequest:actReq,
                 receiver: receiver
             });
+            
+            
             return actReq;
         }
     },

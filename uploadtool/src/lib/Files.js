@@ -1,0 +1,74 @@
+const fs = require('fs');
+const path = require('path');
+import settings  from './Settings';
+import { publish} from './MessageBus'
+const files = {
+  getCurrentDirectoryBase : () => {
+    return path.basename(process.cwd());
+  },
+
+  directoryExists : (filePath) => {
+    try {
+      return fs.statSync(filePath).isDirectory();
+    } catch (err) {
+      return false;
+    }
+  },
+
+  fileTree : (callback, base= process.cwd(), compare=[])=>{
+
+    var result = []
+     fs.readdir(base, function(err, items) {
+        var getStats = (i, items) =>{
+          if (i==items.length)
+            return callback(result);
+          fs.stat(base +'/' +  items[i],
+              function(err, stats){
+                var file = {
+                  name:items[i],
+                  size : stats.size,
+                  created: new Date(stats.ctime),
+                  modified: new Date(stats.mtime),
+                  isDirectory: stats.isDirectory()
+                }
+                
+                var compareChilds=[];
+                var compFile = compare.find(row=>{return row.name==file.name})
+                if(compFile){
+                  //known entry, keep old extra's
+                  file ={...compFile, ...file}
+                  compareChilds =compFile.files;
+                }
+                if (typeof(file.progress)!='undefined' && !file.id)
+                  delete file.progress;
+                  delete file.state
+                  if( file.progress==0)
+                    delete file.progress
+                result.push(file)
+
+                if (file.isDirectory ){
+                  files.fileTree(function(res){
+                        file.files=res;
+                        getStats(i+1, items)
+                  }, base+'/' + file.name, compareChilds)
+                }else{
+                  getStats(i+1, items)
+                }
+              })
+          }
+          getStats(0, items);
+      })
+    },
+    publishFileList: (receiver)=>{
+      var fileList = JSON.stringify(settings.get('fileTree'))
+      publish({
+          receiver: receiver,
+          type:'fileList',
+          payload:fileList
+      }).catch((error) => {
+            console.log(JSON.stringify(error))
+      })
+    }
+};
+let publishFileList = files.publishFileList;
+export {files, publishFileList}

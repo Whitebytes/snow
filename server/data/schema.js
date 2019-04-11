@@ -1,6 +1,6 @@
 
 // Define our schema using the GraphQL schema language
-const typeDefs = ({queries, schemas}) => `
+const typeDefs = ({queries, schemas, mutations}) => `
     scalar DateTime
     type Query {
         ${queries}
@@ -8,6 +8,7 @@ const typeDefs = ({queries, schemas}) => `
     }
 
     type Mutation {
+        ${mutations}
         login (
             email: String!,
             password: String!,
@@ -18,6 +19,7 @@ const typeDefs = ({queries, schemas}) => `
             receiver: String, 
             type: String!
             payload: String 
+            origin:Int
         ): ActReq
         createUser (
             firstName: String!,
@@ -44,8 +46,10 @@ const typeDefs = ({queries, schemas}) => `
     type ActReq {
         type: String
         payload: String
-        receiver: String
+        sender: String
         userId: String!
+        id: Int!
+        origin: Int
     }
     
     ${schemas}
