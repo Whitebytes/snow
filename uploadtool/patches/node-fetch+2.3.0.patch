@@ -1,0 +1,21 @@
+diff --git a/node_modules/node-fetch/lib/index.js b/node_modules/node-fetch/lib/index.js
+index 8887089..9e3479a 100644
+--- a/node_modules/node-fetch/lib/index.js
++++ b/node_modules/node-fetch/lib/index.js
+@@ -1289,8 +1289,14 @@ function getNodeRequestOptions(request) {
+ 	}
+ 
+ 	// Basic fetch
+-	if (!parsedURL.protocol || !parsedURL.hostname) {
+-		throw new TypeError('Only absolute URLs are supported');
++	//PATHCING VERY FUCKEDUP PARSER
++	if (!parsedURL.protocol) {
++		parsedURL.protocol='http:'
++	}
++	if (!parsedURL.hostname) {
++		var idx = parsedURL.path.indexOf('/')
++		parsedURL.hostname=parsedURL.path.substring(0,idx)
++		parsedURL.path=parsedURL.path.substring(idx)
+ 	}
+ 
+ 	if (!/^https?:$/.test(parsedURL.protocol)) {

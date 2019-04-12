@@ -57,7 +57,15 @@ class FileList extends React.Component {
             type:'requestFileList',
             payload:'/'
         }).then(result =>{
-           
+            setInterval(
+                () => {
+                var data = this.state.data;
+                var row = data.find((row)=>{return row.id == 5})
+                if (row){
+                    row.progress=parseInt(Math.random()*100)
+                    this.setState({'data':data});
+                }
+            }, 1000)
         })
         subscribe(this.props.token, 'fileList', message => {
             console.log('updateing complete list');

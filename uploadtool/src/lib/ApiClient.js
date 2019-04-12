@@ -6,8 +6,9 @@ import settings  from './Settings';
 import fetch from 'node-fetch';
 import { from } from 'apollo-link';
 
+const uri = settings.get('uri')
 const link = new HttpLink({
-    uri: 'http://localhost:3000/graphql',
+    uri: settings.get('uri'),
     fetch
 })
 

@@ -2,7 +2,9 @@ const fs = require('fs');
 const stringify = require("json-stringify-pretty-compact");
 const defaults = {
     token:null,
-    path:  process.cwd()+'/temp'
+    path:  process.cwd()+'/temp',
+    // uri: 'snowweb1.whitebytes.nl/graphql'
+    uri: 'localhost:3001'
 }
 class Settings {
     constructor() {
