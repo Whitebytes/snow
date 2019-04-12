@@ -9,14 +9,14 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import settings  from './Settings';
 import { setContext } from 'apollo-link-context';
 
-
+var uri = settings.get('uri')
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: `http://${uri}/graphql`,
   fetch: fetch
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:3000/graphql`,
+  uri: `ws://${uri}/graphql`,
   fetch:fetch,
   webSocketImpl: WebSocket,
   options: {
@@ -49,9 +49,10 @@ const authLink = setContext((_, { headers }) => {
 
 const link = ApolloLink.from([authLink, terminatingLink]);
 
-const client = ()=> new ApolloClient({
+const client = new ApolloClient({
   ssrMode: true,
   link:link,
   cache: new InMemoryCache()
 });
+
 export default client;

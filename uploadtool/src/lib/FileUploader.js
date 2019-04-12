@@ -1,6 +1,6 @@
 
 import settings  from './Settings';
-import apiClient  from './ApiClient';
+import client  from './Subscriptions';
 import {publish} from './MessageBus'
 import{ publishFileList } from './Files'
 const stringify = require("json-stringify-pretty-compact");
@@ -172,7 +172,7 @@ export const uploadFiles = async (message) => {
     settings.save()
     
     //let own server know were gonna upload en get ids for files:
-    let uploadResponse = await apiClient.mutate({
+    let uploadResponse = await client.mutate({
         mutation:gql(uploadRequest),
         variables:{
             fileList:uploadList.map(({name, size}) =>({name, size})),

@@ -1,4 +1,4 @@
-import apiClient from "./ApiClient"
+import client from "./Subscriptions"
 import gql from "graphql-tag";
 import settings  from './Settings';
 import {uploadFiles} from './FileUploader'
@@ -20,7 +20,7 @@ var subscribers =[]
 
 const publish = (payload, timeout=5000) =>{
     var promise = new Promise(function (resolve, reject){
-        apiClient.mutate({
+        client.mutate({
             mutation: pubMessage,
             variables:{...payload }
         })

@@ -44,31 +44,28 @@ class FileList extends React.Component {
         })
         return res
     }
-    componentDidUpdate(prevProps, prevState) {
-        if (this.props.token!= prevProps.token){
-            this.load()
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (this.props.token!= prevProps.token){
+    //         this.load()
+    //     }
+    // }
     componentDidMount(){this.load()}
     load(){
+       
         this.setState({'data':[]})
         publish({
             receiver: this.props.token,
             type:'requestFileList',
             payload:'/'
-        }).then(result =>{
-            setInterval(
-                () => {
-                var data = this.state.data;
-                var row = data.find((row)=>{return row.id == 5})
-                if (row){
-                    row.progress=parseInt(Math.random()*100)
-                    this.setState({'data':data});
-                }
-            }, 1000)
         })
+        this.subscribeToUpdates();
+    }
+    subscribeToUpdates(){
+        if(this.state.subscribed)
+            return
+        this.setState({subscribed:true});
+
         subscribe(this.props.token, 'fileList', message => {
-            console.log('updateing complete list');
             var dat = this.flattenTable(JSON.parse(message.payload) )
             var data=dat.map(({created, modified, size, ...rest})=>{
                 modified = new Date(created)> new Date(modified) ? created: modified;
@@ -76,11 +73,23 @@ class FileList extends React.Component {
                     created: this.formatDate(created),
                     modified: this.formatDate(modified),
                     hrSize: this.readableFileSize(size),
-                    size,
+                    size,c
                     ...rest
                 }
             })
             this.setState({'data': data})
+        })
+        subscribe(this.props.token, 'uploadProgress',
+            (message) => {
+            var payload = JSON.parse(message.payload);
+            var data = this.state.data;
+            var row = data.find((row)=>{return row.mediaRawId == payload.mediaRawId})
+            
+            if (row){
+                row.progress=payload.progress
+                row.size =payload.size
+                this.setState({'data':data});
+            }
         })
     }
     getFileList(rows){
@@ -104,18 +113,7 @@ class FileList extends React.Component {
                     files: this.getFileList(this.state.selectedRows)
                 })
             })
-            subscribe(this.props.token, 'uploadProgress',
-                (message) => {
-                var payload = JSON.parse(message.payload);
-                var data = this.state.data;
-                var row = data.find((row)=>{return row.mediaRawId == payload.mediaRawId})
-                
-                if (row){
-                    row.progress=payload.progress
-                    row.size =payload.size
-                    this.setState({'data':data});
-                }
-            })
+           
           
         }
     }
@@ -132,7 +130,7 @@ class FileList extends React.Component {
                 { title: 'Modified', field: 'modified', type: 'numeric' },
                 { title: 'Size', field: 'hrSize', type: 'string' },
                 { title: 'Cloud', field: 'progress', type:'numeric', render:({progress, size})=>{
-     
+                    
                     if (typeof(progress)=='undefined')
                         return;
                         

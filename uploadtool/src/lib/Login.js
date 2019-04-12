@@ -1,7 +1,7 @@
 const inquirer   = require('inquirer');
 const os   = require('os');
 import settings  from './Settings';
-import apiClient from "./ApiClient"
+import client  from './Subscriptions';
 import gql from "graphql-tag";
 const userQ='query{currUser{firstName, lastName}}'
 const query=`mutation login(
@@ -19,7 +19,7 @@ const query=`mutation login(
 export default  async () => {
   var token = settings.get('token');
   if (token){
-    var currUser = await apiClient
+    var currUser = await client
     .query({query: gql(userQ)})
       .then((res)=>{
         return res.data.currUser;
@@ -60,7 +60,7 @@ export default  async () => {
   while(count++<3){
     var credits = await inquirer.prompt(questions);
     
-    user = await apiClient
+    user = await client
       .mutate({mutation: gql(query), variables:{
         email: credits.username ||'geertjan@whitebytes.nl',
         password: credits.password,
@@ -72,7 +72,7 @@ export default  async () => {
       .then((rest) => {
         settings.set('token',rest.data.login);
         settings.save();
-        return apiClient
+        return client
         .query({query: gql(userQ)})
           .then((res)=>{
             return res.data.currUser;

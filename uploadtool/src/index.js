@@ -21,7 +21,7 @@ const run = async () => {
   settings.load()
     await login().then((user)=>{
       console.log(`Welcome back ${user.firstName}!`)
-       client().subscribe({
+       client.subscribe({
         query: gql`subscription{actionRequest{type, payload, sender, userId, origin, id	}}`,
         variables: {}
       }).subscribe({
