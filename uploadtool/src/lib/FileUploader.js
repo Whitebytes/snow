@@ -159,7 +159,7 @@ const findInTree =(tree,fullName)=>{
 
 export const uploadFiles = async (message) => {
     let payload = JSON.parse(message.payload);
-    let root = settings.get('uploadFolder')
+    let root = settings.get('path')+settings.get('uploadFolder')
     let files =  payload.files;
     let projectId = payload.projectId
     var fileTree = settings.get('fileTree');
