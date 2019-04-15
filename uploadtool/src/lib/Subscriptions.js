@@ -14,6 +14,7 @@ const httpLink = new HttpLink({
   uri: `http://${uri}/graphql`,
   fetch: fetch
 });
+console.log(`connected to ${uri}`)
 
 const wsLink = new WebSocketLink({
   uri: `ws://${uri}/graphql`,

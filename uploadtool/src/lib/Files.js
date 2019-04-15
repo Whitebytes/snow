@@ -3,10 +3,7 @@ const path = require('path');
 import settings  from './Settings';
 import { publish} from './MessageBus'
 const files = {
-  getCurrentDirectoryBase : () => {
-    return path.basename(process.cwd());
-  },
-
+  
   directoryExists : (filePath) => {
     try {
       return fs.statSync(filePath).isDirectory();
@@ -15,8 +12,11 @@ const files = {
     }
   },
 
-  fileTree : (callback, base= process.cwd(), compare=[])=>{
-
+  fileTree : (callback, compare=[])=>{
+    var base =  settings.get('path') + settings.get('uploadFolder');
+    if (!fs.existsSync(base)){
+        fs.mkdirSync(base);
+    }
     var result = []
      fs.readdir(base, function(err, items) {
         var getStats = (i, items) =>{

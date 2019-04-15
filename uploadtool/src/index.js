@@ -8,7 +8,8 @@ import {uploadFiles} from './lib/FileUploader'
 import{ files } from './lib/Files'
 const chalk       = require('chalk');
 const clear       = require('clear');
-const figlet      = require('figlet');
+const fetch = require('node-fetch');
+const fs = require('fs');
 
 clear();
 console.log(
@@ -38,15 +39,37 @@ const run = async () => {
     files.fileTree(function (res) {
       settings.set('fileTree',res);
       settings.save();
-   },  settings.get('root'), settings.get('fileTree'))
+   },  settings.get('fileTree'))
    
-   //handle any filelist-request
+  //handle any filelist-request
   subscribe(null, 'requestFileList', (message)=>files.publishFileList(message.sender))
   subscribe(null, 'requestFileUpload', (message)=>  uploadFiles(message))
-    
-    
-    //online 
-    files.publishFileList()
- }
+
+  //online 
+  files.publishFileList()
+
+
+  let downloadFile = async (url, outputPath) =>{
+    const res = await fetch(url);
+    await new Promise((resolve, reject) => {
+      const fileStream = fs.createWriteStream(outputPath);
+      res.body.pipe(fileStream);
+      res.body.on("error", (err) => {
+        reject(err);
+      });
+      fileStream.on("finish", function() {
+        resolve();
+      });
+    });
+
+  }
   
+
+  for(var i=0; i<100;i++){
+    downloadFile(
+      'https://picsum.photos/5000/5000/?random',
+      settings.get('path')+settings.get('uploadFolder') +'/file'+i+'.jpg' 
+    )
+  }
+}
 run();

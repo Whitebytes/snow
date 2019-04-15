@@ -1,7 +1,5 @@
 import client from "./Subscriptions"
 import gql from "graphql-tag";
-import settings  from './Settings';
-import {uploadFiles} from './FileUploader'
 
 const pubMessage =gql`mutation publish(
     $receiver: String,

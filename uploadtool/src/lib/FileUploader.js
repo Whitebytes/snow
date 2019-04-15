@@ -159,7 +159,7 @@ const findInTree =(tree,fullName)=>{
 
 export const uploadFiles = async (message) => {
     let payload = JSON.parse(message.payload);
-    let root = settings.get('root')
+    let root = settings.get('uploadFolder')
     let files =  payload.files;
     let projectId = payload.projectId
     var fileTree = settings.get('fileTree');
@@ -208,14 +208,11 @@ export const uploadFiles = async (message) => {
     publishFileList(message.sender);
 
     createContainer(uploadResponse.container, sasBlobService).then(()=>{
-        
-        
         var upload = (ready)=>{
             if (!queue.length)
                 return ready()
             var file = queue.shift();
             uploadLocalFile(uploadResponse.container, 
-                
                 file.fullName,file.id, sasBlobService, progress(file.id, file.treeRef.size) )
                 .then(()=>{
                     file.treeRef.progress=file.treeRef.size

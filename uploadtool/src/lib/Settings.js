@@ -2,14 +2,16 @@ const fs = require('fs');
 const stringify = require("json-stringify-pretty-compact");
 const defaults = {
     token:null,
-    path:  process.cwd()+'/temp',
-    // uri: 'snowweb1.whitebytes.nl/graphql'
-    uri: 'localhost:3001'
+    uploadFolder: `/FieldFiles`,
+    path:  process.cwd(),
+    uri: 'snowweb1.whitebytes.nl'
+    //uri: 'localhost:3001'
 }
 class Settings {
     constructor() {
         this.settings = defaults;
-        this.configFile = this.settings.path+'/.settings.json';
+        this.configFile = this.get('path')+'/.settings.json';
+        this.load();
     }
     load(){
         if (fs.existsSync(this.configFile)) {

@@ -18,7 +18,7 @@
     "graphql": "^14.2.0",
     "inquirer": "^6.2.2",
     "json-stringify-pretty-compact": "^2.0.0",
-    "node-fetch": "^1.7.2",
+    "node-fetch": "^1.7.3",
     "subscriptions-transport-ws": "^0.9.16",
     "url": "^0.11.0",
     "yargs": "^11.0.0"
@@ -33,7 +33,7 @@
   "scripts": {
     "tool": "babel-node src/index.js",
     "pack": "npx webpack",
-    "build": "pkg --targets latest-windows-x64 --output dist/main  dist/main.js"
+    "build": "pkg --targets latest-osx-x86 --output dist/main  --debug dist/main.js"
   },
   "repository": {
     "type": "git",
