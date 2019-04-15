@@ -44,15 +44,15 @@ class FileList extends React.Component {
         })
         return res
     }
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (this.props.token!= prevProps.token){
-    //         this.load()
-    //     }
-    // }
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.token!= prevProps.token){
+            this.load()
+        }
+    }
     componentDidMount(){this.load()}
+    
     load(){
-       
-        this.setState({'data':[]})
+       this.setState({'data':[]})
         publish({
             receiver: this.props.token,
             type:'requestFileList',
