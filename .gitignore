@@ -76,3 +76,4 @@ server/.env
 */dist/
 */.data/
 temp/
+package-lock.json
