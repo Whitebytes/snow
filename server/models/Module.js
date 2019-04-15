@@ -4,7 +4,15 @@ import db from '.';
 let cliMod={
     id: 301,
     name: 'Clients',
-    icon: 'M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z'
+    icon: 'M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z',
+    menuItems:[{
+        id:302,
+        name: 'Clients',
+        url: '/clients',
+        moduleId: 301,
+        icon: 'M12 9h4c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1zm0 4h4c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1zm0 4h4c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1zM7 7h2v2H7zm0 4h2v2H7zm0 4h2v2H7zM20 3H4c-.55 0-1 .45-1 1v16c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-1 16H5V5h14v14z'
+        }]
+
   };
 
 const cliMenu =   {
@@ -60,9 +68,10 @@ const model = (sequelize, DataTypes) => {
                     ]
                     
                   }).map((item) => item)
-                  if (authUser){
-                      let idx=302;
-                    cliMod.menuItems = 
+                  if (authUser){ 
+                      let idx=303;
+                    let xtrMod = Object.assign({},cliMod)
+                    xtrMod.menuItems=cliMod.menuItems.concat( 
                         (await db.Token.findAll({
                             where:{userId: authUser.id, active:true}
                         }))
@@ -77,8 +86,8 @@ const model = (sequelize, DataTypes) => {
                                 url: url,
                                 icon: token.appName=='Browser' ? browsericon: localPcIcon
                                 }
-                            })
-                        mods.push(cliMod)
+                            }))
+                        mods.push(xtrMod)
                 }
  
                 return mods;

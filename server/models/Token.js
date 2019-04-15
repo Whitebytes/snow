@@ -29,6 +29,16 @@ module.exports = (sequelize, DataTypes) => {
         appName: String!
         appProps: String
     }`
-    
+  
+    Token.gqlQuery=`queryClients:[Token]`
+    Token.resolvers= {
+        Query: {
+            async queryClients(_,__,{authUser}) {
+                return await Token.findAll({
+                    where:{userId: authUser.id, active:true}
+                })
+            },
+        }
+    }
     return Token;
 };

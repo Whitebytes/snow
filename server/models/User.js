@@ -64,7 +64,7 @@ const model = (sequelize, DataTypes) => {
                 return await User.findById(id);
             },
             async currUser(_,__,{authUser} ) {
-                return await User.findById(authUser.id);
+                return authUser;
             },
         },
         Mutation: {

@@ -1,0 +1,8 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg3YTZiMDgxLWY0YjYtNDBmZC1iOTE0LTZiODIzMzFiYWJlOSIsImlhdCI6MTU1NTMyMTg4NiwiZXhwIjoxNTg2ODc5NDg2fQ.sGDEnlMkjVrF2qVMRCOdAqaD8w7zR2BGkH_6CBEwGpE",
+  "uploadFolder": "/FieldFiles",
+  "path": "/home/geertjan/projects/snow/uploadtool",
+  "uri": "snowweb1.whitebytes.nl",
+  "root": "/home/geertjan/projects/snow/uploadtool/temp",
+  "fileTree": []
+}

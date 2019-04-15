@@ -48,17 +48,17 @@ const seeder = {
           avatar: '/static/Jannes.jpg'
         })]
         db.Token.create({
-          id: 'e78f508c-ead7-47ed-9f17-44e3fd3b945e',
+          id: '3ee6d04f-cf37-4c26-9109-5eb68c4a0b85',
           userId:'1223ff59-7a5e-4add-ab7c-981f5e3d2237',
           appName:'graphql',
-          appProps: '{"hostname":"webPC}',
+          appProps: '{"hostname":"localhost","ip":"::ffff:127.0.0.1","userAgent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36","__typename":"ClientInfo"}',
           active: false
         })
         db.Token.create({
-          id: 'e1ee417e-78ce-4f04-9446-9a9de41070ef',
+          id: 'e78f508c-ead7-47ed-9f17-44e3fd3b945e',
           userId:'1223ff59-7a5e-4add-ab7c-981f5e3d2237',
           appName:'browser',
-          appProps: '{"hostname":"webPC"}',
+          appProps: '{"hostname":"graphQl"}',
           active: false
         })
         db.Token.create({

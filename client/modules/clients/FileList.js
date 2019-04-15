@@ -73,7 +73,7 @@ class FileList extends React.Component {
                     created: this.formatDate(created),
                     modified: this.formatDate(modified),
                     hrSize: this.readableFileSize(size),
-                    size,c
+                    size,
                     ...rest
                 }
             })

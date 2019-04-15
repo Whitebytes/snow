@@ -23,6 +23,10 @@
     "url": "^0.11.0",
     "yargs": "^11.0.0"
   },
+  "pkg": {
+    "targets": ["latest-osx-x86", "latest-linux-x86", "latest-windows-x86"]
+  },
+  "bin": "dist/main.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-stage-3": "^6.24.1",
@@ -33,7 +37,7 @@
   "scripts": {
     "tool": "babel-node src/index.js",
     "pack": "npx webpack",
-    "build": "pkg --targets latest-osx-x86 --output dist/main  --debug dist/main.js"
+    "build": "pkg --output ../client/static/os/FieldCli ./package.json"
   },
   "repository": {
     "type": "git",

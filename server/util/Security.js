@@ -14,6 +14,7 @@ class Security{
                 token=token.substring(7);
                 try{
                     var jwtInfo = jwt.verify(token, process.env.JWT_SECRET);
+                    console.log(jwtInfo.id)
                     var dbToken = await Token.findOne({ where: { id: jwtInfo.id } })
                     if (dbToken){
                         req.user = await dbToken.getOwner();
