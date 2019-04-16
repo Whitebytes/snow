@@ -18,9 +18,10 @@ const resolvers = {
         }, 
     },
     Mutation: {
-        login(_, { email, password, appName, appProps }, { res }) {
+        async login(_, { email, password, appName, appProps }, { res }) {
             var security = require('../util/Security').default;
-            return security.login(email, password,appName, appProps, res)
+            let token = await security.login(email, password,appName, appProps, res)
+            return token;
 
         },
         publish: (_, args, { req }) =>{

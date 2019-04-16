@@ -10,11 +10,9 @@ class Security{
         return async function(req, res, next) {
            if (req.get('Authorization')){
                 var token = req.get('Authorization');
-                res.cookie('Authorization',token, { maxAge: 900000, httpOnly: true })
                 token=token.substring(7);
                 try{
                     var jwtInfo = jwt.verify(token, process.env.JWT_SECRET);
-                    console.log(jwtInfo.id)
                     var dbToken = await Token.findOne({ where: { id: jwtInfo.id } })
                     if (dbToken){
                         req.user = await dbToken.getOwner();
@@ -59,7 +57,9 @@ class Security{
             userId: user.userId
         }, process.env.JWT_SECRET, { expiresIn: '1y' });
         res.cookie('Authorization','Bearer '+user.token , { maxAge: 900000, httpOnly: false})
-        return user.token;
+        ;
+        console.log('created', token.id)
+        return user.token
     }
 }
 export default Security;

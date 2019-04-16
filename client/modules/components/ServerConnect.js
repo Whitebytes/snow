@@ -8,7 +8,7 @@ import Router from 'next/router'
 
 import {dispatch} from '../../data/MessageBus'
 
-const userQ='query{currUser{firstName, lastName}}'
+const userQ='query{currUser{firstName, lastName, avatar}}'
 
 
 class ServerConnect extends React.Component {
@@ -40,10 +40,10 @@ class ServerConnect extends React.Component {
             query: gql(userQ),
             fetchPolicy: 'no-cache'
         }).then(({data, errors}) => {
-            if (errors){
+            if (errors || data.currUser==null){
                 this.setState({attempt: 'fail'})
             }
-             this.props.loggedon(data);
+             this.props.loggedon(data.currUser);
         }).catch((error)=>{
             this.setState({attempt: 'fail'})
             // Router.push('/me/Login')
@@ -69,6 +69,7 @@ class ServerConnect extends React.Component {
     render() {
         const isClientSide = typeof(window)=='object'
         const isLogonPage = (isClientSide&& window.location.pathname=='/me/Login')
+
         if (this.state.attempt=='fail' && !isLogonPage){
             Router.push('/me/Login')
             return '';

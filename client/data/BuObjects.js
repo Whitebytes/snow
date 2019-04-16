@@ -26,7 +26,7 @@ class BuObjects extends Component{
             })
         }
     render() {  
-        const { children,...props } = this.props;
+        const { children } = this.props;
         return children;
     }
     

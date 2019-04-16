@@ -31,6 +31,7 @@ export default  async () => {
     if (currUser)
       return currUser;
   }
+  var token = settings.set('token', null);
 
   const questions = [
     {
@@ -69,12 +70,12 @@ export default  async () => {
           hostname: os.hostname()
         })
       }}) 
-      .then((rest) => {
+      .then(async (rest) => {
         settings.set('token',rest.data.login);
         settings.save();
-        return client
-        .query({query: gql(userQ)})
+        return await client.query({query: gql(userQ), fetchPolicy:'no-cache'})
           .then((res)=>{
+            console.log(res)
             return res.data.currUser;
         })
       }).catch(error =>{console.log(error)})

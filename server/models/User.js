@@ -64,6 +64,7 @@ const model = (sequelize, DataTypes) => {
                 return await User.findById(id);
             },
             async currUser(_,__,{authUser} ) {
+                console.log(authUser)
                 return authUser;
             },
         },

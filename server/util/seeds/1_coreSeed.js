@@ -29,7 +29,7 @@ const seeder = {
           lastName: 'Kemme',
           email: 'geertjan@whitebytes.nl',
           password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
-          avatar: '/static/1.jpg'
+          avatar: 'GeertJan.jpg'
         }),
         await db .User.create({
           id: '1223ff59-7a5e-4add-ab7c-981f5e3d3672',
@@ -37,7 +37,7 @@ const seeder = {
           lastName: 'Feldbrugge',
           email: 'lude@fieldworkcompany.n',
           password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
-          avatar: '/static/Lude.jpeg'
+          avatar: 'Lude.jpg'
         }),
         await db .User.create({
           id: '1223ff59-7a5e-4add-ab7c-981f5e3d3198',
@@ -45,7 +45,7 @@ const seeder = {
           lastName: 'Heusinkveld',
           email: 'jannes@fieldworkcompany.n', 
           password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
-          avatar: '/static/Jannes.jpg'
+          avatar: '/Jannes.jpg'
         })]
         db.Token.create({
           id: '3ee6d04f-cf37-4c26-9109-5eb68c4a0b85',

@@ -58,13 +58,14 @@ class ProfileMenu extends React.Component {
       }
 
   render(){
-      const {classes} = this.props;
+      const {classes, currUser} = this.props;
       const { anchorEl, open } = this.state;
-    
+      let avatar = currUser? "/static/"+currUser.avatar : null
     return (
+        
         <div>
             <Badge badgeContent={4}  id="Progress1" color="secondary"  >
-                <Avatar alt="Remy Sharp" src="/static/Jannes.jpg" onClick={this.handleClick}/>
+                <Avatar alt="U" src={avatar} onClick={this.handleClick}/>
             </Badge>
 
         <Popper open={open} anchorEl={anchorEl} transition disablePortal  placement="bottom-end" >

@@ -38,8 +38,10 @@ const terminatingLink = split(
   wsLink,
   httpLink,
 );
-const authLink = setContext((_, { headers }) => {
+
+const authLink = setContext((_, { headers }) =>() => {
   var token = settings.get('token');
+  console.log(token)
   return {
             headers: {
       ...headers,
@@ -50,10 +52,22 @@ const authLink = setContext((_, { headers }) => {
 
 const link = ApolloLink.from([authLink, terminatingLink]);
 
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  },
+}
+
 const client = new ApolloClient({
   ssrMode: true,
   link:link,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: defaultOptions
 });
 
 export default client;

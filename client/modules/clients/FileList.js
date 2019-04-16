@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import 'moment-timezone';
 import CloudDone from '@material-ui/icons/CloudDone';
 import CloudQueue from '@material-ui/icons/CloudQueue';
+import UploadDialog from './UploadDialog'
 
 class FileList extends React.Component {
     
@@ -13,6 +14,7 @@ class FileList extends React.Component {
         super(props)
         this.state={
             data:[],
+            dialogOpen:false,
             menuOpen:false
         }
     }
@@ -103,18 +105,18 @@ class FileList extends React.Component {
                 name: fileName(row) }))
             .filter(row=>{return !row.isDirectory && !row.progress })
     }
+
     menuItemClick(name){
         if (name=='upload'){
-            publish({
-                receiver: this.props.token,
-                type:'requestFileUpload',
-                payload: JSON.stringify({
-                    projectId: 'to: build form',
-                    files: this.getFileList(this.state.selectedRows)
-                })
-            })
-           
-          
+            this.setState({'dialogOpen': true})
+        //     publish({
+        //         receiver: this.props.token,
+        //         type:'requestFileUpload',
+        //         payload: JSON.stringify({
+        //             projectId: 'to: build form',
+        //             files: this.getFileList(this.state.selectedRows)
+        //         })
+        //     })
         }
     }
     toggleMenu(open){
@@ -167,7 +169,10 @@ class FileList extends React.Component {
                 selection: true,
                 search: false
             }}
-            /><FileMenu menuItemClick={(name)=>this.menuItemClick(name)} toggleMenu={()=>this.toggleMenu()} { ...this.state} ></FileMenu></div>
+            />
+            <FileMenu menuItemClick={(name)=>this.menuItemClick(name)} toggleMenu={()=>this.toggleMenu()} { ...this.state} ></FileMenu>
+            <UploadDialog  open={this.state.dialogOpen}></UploadDialog>
+            </div>
            
             )
         
