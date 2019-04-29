@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from "react-redux";
 import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";
 import { logonStates } from "../../redux/states";
-import client from "../ApiClient"
+import client from "../../data/ApiClient"
 import gql from "graphql-tag";
 import Router from 'next/router'
-
-import {dispatch} from '../../data/MessageBus'
+import {subscribe} from '../../data/Queries'
 
 const userQ='query{currUser{firstName, lastName, avatar}}'
 
@@ -52,12 +51,12 @@ class ServerConnect extends React.Component {
     connect = ()=>{
         const {connected} = this.props
         client.subscribe({
-            query: gql`subscription{actionRequest{type, payload, sender,id, origin	}}`,
+            query: subscribe,
             variables: {}
             }).subscribe({
                 next ({data}) {
                     if (data.actionRequest){
-                        dispatch(data.actionRequest);
+                        //dispatch(data.actionRequest);
                     }
                 },
                 error(err) { console.error('err', err); },

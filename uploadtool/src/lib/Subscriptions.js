@@ -41,7 +41,6 @@ const terminatingLink = split(
 
 const authLink = setContext((_, { headers }) =>() => {
   var token = settings.get('token');
-  console.log(token)
   return {
             headers: {
       ...headers,

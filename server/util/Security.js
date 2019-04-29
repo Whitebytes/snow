@@ -56,9 +56,6 @@ class Security{
             id: token.id,
             userId: user.userId
         }, process.env.JWT_SECRET, { expiresIn: '1y' });
-        res.cookie('Authorization','Bearer '+user.token , { maxAge: 900000, httpOnly: false})
-        ;
-        console.log('created', token.id)
         return user.token
     }
 }

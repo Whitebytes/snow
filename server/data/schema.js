@@ -16,10 +16,9 @@ const typeDefs = ({queries, schemas, mutations}) => `
             appProps: String!
         ): String
         publish (
-            receiver: String, 
-            type: String!
+            receiver: String,
+            topic: String!
             payload: String 
-            origin:Int
         ): ActReq
         createUser (
             firstName: String!,
@@ -36,7 +35,7 @@ const typeDefs = ({queries, schemas, mutations}) => `
         ): User
     }
     type Subscription {
-        actionRequest: ActReq
+        actionRequest(topic: String, sender: String): ActReq
     }
     type ClientInfo {
         hostname: String!
@@ -44,12 +43,11 @@ const typeDefs = ({queries, schemas, mutations}) => `
         userAgent: String!
     }
     type ActReq {
-        type: String
+        topic: String
         payload: String
         sender: String
         userId: String!
         id: Int!
-        origin: Int
     }
     
     ${schemas}

@@ -1,5 +1,4 @@
 import MaterialTable from 'material-table'
-import {publish, subscribe} from '../../data/MessageBus'
 import FileMenu  from './FileMenu'
 import moment from 'moment';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -7,6 +6,7 @@ import 'moment-timezone';
 import CloudDone from '@material-ui/icons/CloudDone';
 import CloudQueue from '@material-ui/icons/CloudQueue';
 import UploadDialog from './UploadDialog'
+import client from '../../data/ApiClient'
 
 class FileList extends React.Component {
     
@@ -55,9 +55,9 @@ class FileList extends React.Component {
     
     load(){
        this.setState({'data':[]})
-        publish({
+        client.publish({
             receiver: this.props.token,
-            type:'requestFileList',
+            topic:'requestFileList',
             payload:'/'
         })
         this.subscribeToUpdates();
@@ -67,7 +67,7 @@ class FileList extends React.Component {
             return
         this.setState({subscribed:true});
 
-        subscribe(this.props.token, 'fileList', message => {
+        client.listen('fileList', this.props.token, message => {
             var dat = this.flattenTable(JSON.parse(message.payload) )
             var data=dat.map(({created, modified, size, ...rest})=>{
                 modified = new Date(created)> new Date(modified) ? created: modified;
@@ -81,7 +81,7 @@ class FileList extends React.Component {
             })
             this.setState({'data': data})
         })
-        subscribe(this.props.token, 'uploadProgress',
+        client.listen( 'uploadProgress',this.props.token,
             (message) => {
             var payload = JSON.parse(message.payload);
             var data = this.state.data;

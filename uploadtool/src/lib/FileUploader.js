@@ -184,7 +184,7 @@ export const uploadFiles = async (message) => {
     var sasBlobService = storage.createBlobServiceWithSas(connection.host, connection.token);
     let progress = (mediaRawId, size) => val =>{
         publish({
-            type:'uploadProgress',
+            topic:'uploadProgress',
             payload: JSON.stringify({
                 progress: Math.min(size, val),
                 mediaRawId: mediaRawId,

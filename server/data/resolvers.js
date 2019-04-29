@@ -25,17 +25,15 @@ const resolvers = {
 
         },
         publish: (_, args, { req }) =>{
-            let {receiver, ...rest} = args;
             let actReq =  { 
                 userId: req.user.id,
                 sender: req.token.id,
                 id: msgCnt++,
-                ...rest
+                ...args
             }
       
             pubsub.publish(REQ_ACTION, {
-                actionRequest:actReq,
-                receiver: receiver
+                actionRequest:actReq
             });
             
             
@@ -47,13 +45,15 @@ const resolvers = {
             // Additional event labels can be passed to asyncIterator creation
             subscribe: withFilter(
                 () => pubsub.asyncIterator(REQ_ACTION),
-                (payload, _, ctx) => {
-                    if (payload.receiver){
-                       return ctx.token.id==payload.receiver;
-                    }
-                    return ctx.user.userId==payload.userId
+                ({actionRequest }, {topic, sender}, ctx) => {
+                    let valid=true;
+                    valid = valid && (!sender || sender==actionRequest.sender)
+                    valid = valid && (!topic || topic===actionRequest.topic)
+                    valid = valid && (ctx.user.id===actionRequest.userId)
+                    valid = valid && (!actionRequest.receiver || ctx.token.id===actionRequest.receiver)
+                    return valid;
                 },
-              ),
+              )
         }
     },
     DateTime: new GraphQLScalarType({

@@ -21,7 +21,7 @@ const tagsList = ['thumbnailed','stitched', 'rendered',
         count--;
         result.push(source.splice(getRandomInt(source.length),1));
     }
-    return result.concat(extra).map((tagName)=> <WithStyle tag={tagName} />
+    return result.concat(extra).map((tagName)=> <WithStyle key={tagName} tag={tagName} />
     );
 }
 

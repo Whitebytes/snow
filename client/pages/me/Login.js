@@ -11,9 +11,8 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Router from 'next/router'
 import gql from "graphql-tag";
 import Link from 'next/link';
-import client  from '../../modules/ApiClient.js';
+import client  from '../../data/ApiClient';
 import Head from 'next/head'
-import { loadMenu } from '../../modules/components/MenuRouter.js';
 
 import { connect } from "react-redux";
 import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";

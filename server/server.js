@@ -37,12 +37,12 @@ const server = new ApolloServer({
       if (connectionParams.authorization) {
         webSocket.token= await security.validateToken(connectionParams.authorization);
         webSocket.user =  await webSocket.token.getOwner();
-        webSocket.token.update({active:true});
+        await webSocket.token.update({active:true});
       if (webSocket.user)
         resolvers.Mutation.publish(null,{ 
-          type:"clientConnect", 
+          topic: 'clientConnect', 
           payload: JSON.stringify({
-              token: webSocket.token
+              token: webSocket.token,
           })
         },{req:webSocket})
       
@@ -55,11 +55,11 @@ const server = new ApolloServer({
     },
     onDisconnect:async (webSocket, context) => {
       if (webSocket.token)
-        webSocket.token.update({active:false})
+        await webSocket.token.update({active:false})
       if (webSocket.user)
       //ready to send
       resolvers.Mutation.publish(null,{ 
-            type:"clientDisconnect", 
+            topic:"clientConnect", 
             payload: JSON.stringify({
                 token: webSocket.token
           })

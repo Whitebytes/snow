@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import { Query } from 'react-apollo';
 import ModuleIcon  from './ModuleIcon.js';
 import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -10,9 +10,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { connect } from "react-redux";
-import router from 'next/router';
 import Link from "next/link"; 
+import { currMenu, moduleList, subscribe } from '../../data/Queries';
+
 
 const styles = theme => ({
     root: {
@@ -32,10 +32,10 @@ const styles = theme => ({
     }
   });
   
-  
+
+
 class ModuleMenu extends Component{
   
- 
     moduleClick = (item)=>{
       this.setState({selectedModule: item, outSync:true})
     }
@@ -47,18 +47,17 @@ class ModuleMenu extends Component{
       // router.events.on('routeChangeComplete', (url) => {
       //   this.setState({outSync: false})
       // })
+      this.props.subscribeToNewComments()
     }
 
     render() {
-        const { classes,drawerOpen, modules } = this.props;
-        const {selectedModule, outSync } = this.state;
-        var exp = selectedModule || this.props.selectedModule;
-        if (!outSync)
-          exp = this.props.selectedModule;
-        return  (<div className={classes.root}>
-            {modules.map((item)=>{
-            let currActive = exp === item.name;
+      const {classes, modules, currMenu, currModule, drawerOpen} =  this.props
+      if (!modules)
+        return '';
 
+      return <div className={classes.root}>{
+        modules.map((item)=>{
+          let currActive =  (currModule && currModule.name === item.name);
           return  <ExpansionPanel key={item.name} 
               expanded={currActive}
               onChange={ ()=> this.moduleClick(item.name)}>
@@ -73,38 +72,55 @@ class ModuleMenu extends Component{
                 {
                   item.menuItems.map((item) =>{
                       let mnuActive = item.name==this.props.selectedMenu;
-                     
-                      return   <ListItem button key={item.name} className={mnuActive?classes.active :''} >
+                      
+                      return<ListItem button key={item.name} className={mnuActive?classes.active :''} >
                           
                       <ListItemIcon>
                           <ModuleIcon path={item.icon} /> 
                       </ListItemIcon>
-                     
-                     <Link href={item.url}>
+                      
+                      <Link href={item.url}>
                         <ListItemText primary={item.name} />
-                       </Link>
+                        </Link>
                       </ListItem>;
                   })
                 }
-             
+              
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            })}
-          </div>
-            )
-      }
-  
+          })
+        }
+       </div>
+      }  
 }
-const mapStateToProps = state => {
-    return { 
-      drawerOpen:state.menu.drawerOpen,
-      selectedMenu: state.menu.selectedMenu,
-      selectedModule: state.menu.selectedModule,
-      modules:state.menu.modules
-    };
-};
+const ModuleMenuWithData =(WrappedComponent)=> {
+  return class extends Component{
 
-const toExp = connect(mapStateToProps,
- null
-  )(withStyles(styles)(ModuleMenu));
-export default toExp;
+    render(){
+      return  <Query query={currMenu} >
+        {({  data: menuState }) =>  (
+          <Query query={moduleList}>
+            {({ data, subscribeToMore, refetch }) => 
+             <WrappedComponent 
+              {...data}
+              {...menuState}
+              subscribeToNewComments={() =>
+                subscribeToMore({
+                  document: subscribe,
+                  variables:{topic: 'clientConnect', sender: null},
+                  updateQuery: (prev, { subscriptionData }) => {
+                    refetch();
+                  
+                  }
+                })
+              }
+            ></WrappedComponent>
+            }
+            </Query>)
+        }
+      </Query>
+    }
+  }
+}
+
+export default ModuleMenuWithData(withStyles(styles)(ModuleMenu));

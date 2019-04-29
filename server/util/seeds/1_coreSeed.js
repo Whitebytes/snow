@@ -45,7 +45,7 @@ const seeder = {
           lastName: 'Heusinkveld',
           email: 'jannes@fieldworkcompany.n', 
           password: '$2b$10$7mCWBa6PrsmPKzjaQwOq0e2wErA/L610Jk3hvPgYq1rFm0b80iEh2',
-          avatar: '/Jannes.jpg'
+          avatar: 'Jannes.jpg'
         })]
         db.Token.create({
           id: '3ee6d04f-cf37-4c26-9109-5eb68c4a0b85',

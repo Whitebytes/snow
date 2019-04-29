@@ -59,11 +59,10 @@ const files = {
           getStats(0, items);
       })
     },
-    publishFileList: (receiver)=>{
+    publishFileList: ()=>{
       var fileList = JSON.stringify(settings.get('fileTree'))
       publish({
-          receiver: receiver,
-          type:'fileList',
+          topic:'fileList',
           payload:fileList
       }).catch((error) => {
             console.log(JSON.stringify(error))

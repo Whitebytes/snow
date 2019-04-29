@@ -7,10 +7,12 @@ import getPageContext from '../src/getPageContext';
 import { Provider } from "react-redux";
 import store from "../redux/store";
 import withReduxStore from '../redux/withReduxStore'
+import { ApolloProvider } from "react-apollo";
 import NProgress from 'nprogress'
 import Router from 'next/router'
 import MenuRouter from '../modules/components/MenuRouter'
 import ServerConnect from '../modules/components/ServerConnect'
+import client from '../data/ApiClient';
 
 Router.events.on('routeChangeStart', url => {
   NProgress.start()
@@ -37,7 +39,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     return (
-
+    <ApolloProvider client={client}>
       <Provider store={store}>
       <ServerConnect>
       <MenuRouter>
@@ -64,6 +66,7 @@ class MyApp extends App {
       </MenuRouter>
       </ServerConnect>
       </Provider>
+      </ApolloProvider>
     );
   }
 }

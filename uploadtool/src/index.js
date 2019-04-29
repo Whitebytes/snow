@@ -12,18 +12,19 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 
 clear();
-console.log(
-  chalk.green(
-    //figlet.textSync('Green Pix CLI', { horizontalLayout: 'full' })
-  )
-); 
+// console.log(
+//   chalk.green(
+//     //figlet.textSync('Green Pix CLI', { horizontalLayout: 'full' })
+//   )
+// ); 
 
 const run = async () => {
   settings.load()
     await login().then((user)=>{
       console.log(`Welcome back ${user.firstName}!`)
        client.subscribe({
-        query: gql`subscription{actionRequest{type, payload, sender, userId, origin, id	}}`,
+        query: gql`subscription($topic: String, $sender: String){actionRequest(topic:$topic, sender: $sender)
+          {topic, payload, sender, userId, id	}}`,
         variables: {}
       }).subscribe({
         next ({data}) {

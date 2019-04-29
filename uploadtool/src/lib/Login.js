@@ -75,7 +75,6 @@ export default  async () => {
         settings.save();
         return await client.query({query: gql(userQ), fetchPolicy:'no-cache'})
           .then((res)=>{
-            console.log(res)
             return res.data.currUser;
         })
       }).catch(error =>{console.log(error)})

@@ -67,7 +67,7 @@ class MediaCard extends React.Component {
         <CardHeader
          avatar={
           media.userOwner?
-          <Avatar aria-label="Recipe" alt={media.userOwner.firstName} src={media.userOwner.avatar} className={classes.avatar} />:''
+          <Avatar aria-label="Recipe" alt={media.userOwner.firstName} src={`static/${media.userOwner.avatar}` } className={classes.avatar} />:''
         }
           action={
             <IconButton>

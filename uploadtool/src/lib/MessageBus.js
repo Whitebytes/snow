@@ -2,60 +2,43 @@ import client from "./Subscriptions"
 import gql from "graphql-tag";
 
 const pubMessage =gql`mutation publish(
-    $receiver: String,
-    $type: String!,
-    $payload: String,
-    $origin: Int
+    $topic: String!,
+    $payload: String
   ){publish(
-    receiver:$receiver,
-    type:$type,
-    payload:$payload,
-    origin: $origin
+    topic:$topic,
+    payload:$payload
   ){userId, id}}`
 
-let waitingList={}
 var subscribers =[]
 
-const publish = (payload, timeout=5000) =>{
+const publish = (payload) =>{
     var promise = new Promise(function (resolve, reject){
         client.mutate({
             mutation: pubMessage,
             variables:{...payload }
         })
         .then( ({data}) =>{
-            console.log(`did publish ${payload.type}`)
-            var id = data.publish.id;
-            waitingList[id]={
-                success: (result)=> {
-                    delete waitingList[id]
-                    resolve(result)
-                }
-                
-            }
+            console.log(`did publish ${payload.topic}`)
+  
         }, (error) =>reject(error))
-        //todo: add timeout
     }) 
     return promise;
 }
-const subscribe = (sender, type, handler) =>{
+const subscribe = (sender, topic, handler) =>{
     subscribers.push({
         sender, 
-        type, 
+        topic, 
         handle: handler
     })
 }
 const dispatch = (message) =>{
-    
-    if (message.origin){
-        var orgRequest = waitingList[message.origin].success;
-        orgRequest(result);
-    }
-    subscribers.filter(({sender, type})=>{
+
+    subscribers.filter(({sender, topic})=>{
         let match =  (!sender ||sender==message.sender) 
-            && (!type || type==message.type)
+            && (!topic || topic==message.topic)
             return match;
     }).forEach(item=>{
-        console.log(`handling ${message.type}`)
+        console.log(`handling ${message.topic}`)
         item.handle(message)
     })
 }
