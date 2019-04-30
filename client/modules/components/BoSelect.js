@@ -1,12 +1,10 @@
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
-import BuObjects from '../../data/BuObjects'
-import { connect } from "react-redux";
 
 class BoSelect extends React.Component {
     render(){
         let {query,objectName, data, valueChanged, ...rest} = this.props;
-        return <BuObjects objectName={objectName} query={query}  >
+        return <Query objectName={objectName} query={query}  >
                 <Select
                 native
                 
@@ -20,22 +18,9 @@ class BoSelect extends React.Component {
                 })
             }
                 
-            </Select></BuObjects>
+            </Select></Query>
     }
 }
 
-
-const mapStateToProps = state => {
-    return (state) => { 
-         if (state.buObjects.queryProjects)
-           return {
-             //loadState:state.buObjects.queryProjects.state, 
-             data:state.buObjects.queryProjects.records
-           }
-           return {data:[]}
-     };
-   };
    
-export default connect(mapStateToProps,
-   null
-   )(BoSelect);
+export default BoSelect

@@ -64,7 +64,9 @@ const model = (sequelize, DataTypes) => {
                 return await User.findById(id);
             },
             async currUser(_,__,{authUser} ) {
-                console.log(authUser)
+                if (!authUser){
+                    throw new Error('There is no current user');
+                }
                 return authUser;
             },
         },

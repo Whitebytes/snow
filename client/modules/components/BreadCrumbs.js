@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
@@ -8,7 +8,8 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import HomeIcon from '@material-ui/icons/Home';
 import ModuleIcon from './ModuleIcon';
-import { connect } from "react-redux";
+import withCTX from '../../data/WithCTX'
+
 
 const styles = theme => ({
   root: {
@@ -47,22 +48,10 @@ const StyledBreadcrumb = withStyles(styles)(CustomBreadcrumb);
 
 class MuBreadCrumbs extends React.Component {
   render(){
-
-      const { classes,modules, selectedMenu, selectedModule } = this.props;
-      
-       let currMod, currMenu
-       modules.map((module)=>{
-          if (module.name==selectedModule) currMod=module;
-          module.menuItems.map((item)=>{
-            if (item.name==selectedMenu) currMenu=item;
-            if (item.url.split('/').length==2)
-              module.mainItem = item
-          })
-      })
-      
-      if (!currMod)
+    const {classes, modules, currMenu, currModule} =  this.props
+    if (!modules || !currModule)
       return '';
-
+     
     return (
       
         <Breadcrumbs arial-label="Breadcrumb">
@@ -76,18 +65,18 @@ class MuBreadCrumbs extends React.Component {
               </Avatar>
             }
           />
-          {currMod.mainItem ? <StyledBreadcrumb
+          {currModule.mainItem ? <StyledBreadcrumb
             component="a"
-            href={currMod.mainItem.url}
-            label={currMod.name}
+            href={currModule.mainItem.url}
+            label={currModule.name}
             avatar={
               <Avatar className={classes.avatar}>
-                 <ModuleIcon path={currMod.icon} />
+                 <ModuleIcon path={currModule.icon} />
               </Avatar>
             }
           /> :''}
       
-          { ( currMenu && currMenu != currMod.mainItem) ?  <StyledBreadcrumb
+          { ( currMenu && currMenu != currModule.mainItem) ?  <StyledBreadcrumb
             label={currMenu.name}
             href={currMenu.icon}
             avatar={
@@ -102,18 +91,5 @@ class MuBreadCrumbs extends React.Component {
   }
 }
 
-MuBreadCrumbs.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-const mapStateToProps = state => {
-    return { drawerOpen:state.menu.drawerOpen, 
-        selectedMenu: state.menu.selectedMenu,
-        selectedModule: state.menu.selectedModule,
-        modules: state.menu.modules,
-     };
-  };
-  
-export default connect(mapStateToProps,null)(
-    withStyles(styles)(MuBreadCrumbs)
-    );
+export default  withCTX(withStyles(styles)(MuBreadCrumbs))

@@ -23,10 +23,7 @@ import Paper from '@material-ui/core/Paper';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ModuleMenu from './ModuleMenu';
 import Search from './Search';
-
-
-import { connect } from "react-redux";
-import { toggleDrawer } from "../../redux/actions";
+import withCTX from '../../data/WithCTX';
 
 
 const drawerWidth = 240;
@@ -133,11 +130,9 @@ class AppFrame extends React.Component {
   };
 
   render() {
-    const { classes, drawerOpen, toggleDrawer, title, popperContent } = this.props;
+    const { classes, drawerOpen, toggleDrawer, title, popperContent, children } = this.props;
     const { anchorEl } = this.state;
     var hasMenu = Boolean(popperContent);
-
-     
     return (
       <React.Fragment>
         <CssBaseline />
@@ -212,7 +207,7 @@ class AppFrame extends React.Component {
           </Drawer>
           <main className={classNames(classes.content, this.props.noBorder? classes.removeBorder:'')}>
           {this.props.noBorder ? '': <div className={classes.appBarSpacer} />}
-              {this.props.children}
+              {children}
           </main>
         </div>
       </React.Fragment>
@@ -220,15 +215,5 @@ class AppFrame extends React.Component {
   }
 }
 
-AppFrame.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-const mapStateToProps = state => {
-  return { drawerOpen:state.menu.drawerOpen, title: state.menu.selectedMenu };
-};
-
-export default connect(
-  mapStateToProps,
-  { toggleDrawer }
-)(withStyles(styles)(AppFrame));
+export default withCTX(withStyles(styles)(AppFrame))

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,28 +7,10 @@ import LockIcon from '@material-ui/icons/LockOutlined'
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Router from 'next/router'
-import gql from "graphql-tag";
 import Link from 'next/link';
 import client  from '../../data/ApiClient';
 import Head from 'next/head'
-
-import { connect } from "react-redux";
-import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";
-import { logonStates } from "../../redux/states";
-
-const clientInfo = gql('query{clientInfo{hostname,ip, userAgent }}')
-const loginMutation =gql`mutation login(
-  $email: String!,
-  $password: String!,
-  $appName: String!,
-  $appProps: String!,
-){login(
-  email:$email,
-  password:$password,
-  appName:$appName,
-  appProps:$appProps
-) }`
+import {clientInfo, loginMutation} from '../../data/Queries'
 
 const styles = theme => ({
   layout: {
@@ -94,7 +75,6 @@ class SignIn extends Component{
       }
       handleSubmit = event => {
         event.preventDefault()
-        this.props.logon()
         client.mutate({
                 mutation:loginMutation,
                 variables:{
@@ -107,16 +87,15 @@ class SignIn extends Component{
             .then(({data}) => {
                 this.setState({error: ''})
                 localStorage.setItem('token', data.login)
-                this.props.loggedon()
-                Router.push(`/`)
-                loadMenu(); //reload because of connected client
+                if (process.browser)
+                  window.location.href='/'
+            
             })
             .catch((err) => {
                 if (err.graphQLErrors){
                     console.log(err.graphQLErrors)
                     this.setState({error: err.graphQLErrors[0].message})
                 }
-
                 else 
                     this.setState({error: 'Sorry, something went wrong terribly wrong'})
             })
@@ -186,18 +165,5 @@ class SignIn extends Component{
     }
 }
 
-SignIn.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-const mapStateToProps = state => {
-  return { 
-    logonState: state.logon.logonState,
-    currUser: state.logon.currUser
-  };
-};
 
-
-export default connect(
-  mapStateToProps,
-  {logon, loggedon, connected, logoff, loggedoff}
-)(withStyles(styles)(SignIn));
+export default withStyles(styles)(SignIn)

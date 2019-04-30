@@ -4,9 +4,6 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../src/getPageContext';
-import { Provider } from "react-redux";
-import store from "../redux/store";
-import withReduxStore from '../redux/withReduxStore'
 import { ApolloProvider } from "react-apollo";
 import NProgress from 'nprogress'
 import Router from 'next/router'
@@ -40,7 +37,6 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
     <ApolloProvider client={client}>
-      <Provider store={store}>
       <ServerConnect>
       <MenuRouter>
       <Container>
@@ -65,11 +61,10 @@ class MyApp extends App {
       </Container>
       </MenuRouter>
       </ServerConnect>
-      </Provider>
       </ApolloProvider>
     );
   }
 }
 
-export default withReduxStore(MyApp);
+export default MyApp
 

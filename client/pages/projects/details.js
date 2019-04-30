@@ -2,11 +2,8 @@
 import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import ProjectDetails from '../../modules/projects/ProjectDetails';
-import BuObjects from '../../data/BuObjects';
-
-import { connect } from "react-redux";
-
-const objName = 'singleProject'
+import {projects} from '../../data/Queries'
+import {Query} from 'react-apollo'
 
 
 class index extends React.Component {
@@ -15,33 +12,22 @@ class index extends React.Component {
   }
 
   render() {
-   
-    const query = `query{queryProjects(clause:"{\\"id\\":\\"${this.props.id}\\"}"){id,name,description,createdAt,
-        mapProps, img, userOwner{firstName, avatar}}}`
+
     return (
       <AppFrame>
-        <BuObjects query={query} objectName={objName}>
-         {this.props.data.map((project)=><ProjectDetails key={project.id} project={project} ></ProjectDetails>)}
-        </BuObjects>
+        <Query query={projects} >{({data, loading})=>{
+          
+            if (loading) return "loading...";
+              return data.queryProjects.map((project)=>  <ProjectDetails key={project.id} project={project} ></ProjectDetails>)
+     
+        }
+      }
+      </Query>
   
       </AppFrame>
     );
   }
 }
 
-const mapStateToProps = state => {
 
-  return (state) => { 
-
-      if (state.buObjects[objName])
-        return {
-          loadState:state.buObjects[objName].state, 
-          data:state.buObjects[objName].records
-        }
-        return {data:[]}
-  };
-};
-
-export default connect(mapStateToProps,
-null
-)(index);
+export default index

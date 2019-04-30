@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Query } from 'react-apollo';
+
 import ModuleIcon  from './ModuleIcon.js';
 import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Link from "next/link"; 
 import { currMenu, moduleList, subscribe } from '../../data/Queries';
+import { Query } from 'react-apollo';
 
 
 const styles = theme => ({

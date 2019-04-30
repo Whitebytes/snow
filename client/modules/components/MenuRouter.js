@@ -2,8 +2,6 @@ import React from 'react';
 import Router from 'next/router'
 import {moduleList, currMenu} from "../../data/Queries";
 import client from "../../data/ApiClient";
-import { Query } from 'react-apollo';
-
 
 class MenuRouter extends React.Component {
     selectMenu(){
@@ -20,6 +18,9 @@ class MenuRouter extends React.Component {
                 let curr = client.readQuery({query: currMenu})
                 modules.map((module)=>{
                     module.menuItems.map((item)=>{
+         
+                        if (item.url.split('/').lenght==2)
+                            module.mainItem = item;
                         if (item.url===url){
                             client.writeQuery({query:currMenu, data:{...curr, currModule:module, currMenu: item}})
                         }else if(item.url.startsWith(moduleName)){

@@ -14,6 +14,7 @@ class FileList extends React.Component {
         super(props)
         this.state={
             data:[],
+            listeners:[],
             dialogOpen:false,
             menuOpen:false
         }
@@ -63,37 +64,41 @@ class FileList extends React.Component {
         this.subscribeToUpdates();
     }
     subscribeToUpdates(){
-        if(this.state.subscribed)
-            return
-        this.setState({subscribed:true});
-
-        client.listen('fileList', this.props.token, message => {
-            var dat = this.flattenTable(JSON.parse(message.payload) )
-            var data=dat.map(({created, modified, size, ...rest})=>{
-                modified = new Date(created)> new Date(modified) ? created: modified;
-                return {
-                    created: this.formatDate(created),
-                    modified: this.formatDate(modified),
-                    hrSize: this.readableFileSize(size),
-                    size,
-                    ...rest
+        this.state.listeners.map((unsubscribe) =>unsubscribe())
+        let listeners =[]
+        listeners.push(
+            client.listen('fileList', this.props.token, message => {
+                var dat = this.flattenTable(JSON.parse(message.payload) )
+                var data=dat.map(({created, modified, size, ...rest})=>{
+                    modified = new Date(created)> new Date(modified) ? created: modified;
+                    return {
+                        created: this.formatDate(created),
+                        modified: this.formatDate(modified),
+                        hrSize: this.readableFileSize(size),
+                        size,
+                        ...rest
+                    }
+                })
+                this.setState({'data': data})
+            })
+        )
+        listeners.push(
+            client.listen('uploadProgress',this.props.token,
+                (message) => {
+                var payload = JSON.parse(message.payload);
+                var data = this.state.data;
+                var row = data.find((row)=>{return row.mediaRawId == payload.mediaRawId})
+                
+                if (row){
+                    row.progress=payload.progress
+                    row.size =payload.size
+                    this.setState({'data':data});
                 }
             })
-            this.setState({'data': data})
-        })
-        client.listen( 'uploadProgress',this.props.token,
-            (message) => {
-            var payload = JSON.parse(message.payload);
-            var data = this.state.data;
-            var row = data.find((row)=>{return row.mediaRawId == payload.mediaRawId})
-            
-            if (row){
-                row.progress=payload.progress
-                row.size =payload.size
-                this.setState({'data':data});
-            }
-        })
+        )
+        this.setState({listeners})
     }
+
     getFileList(rows){
         const fileName = (row)=>{
             if (row.parent) return fileName(row.parent)+'/'+row.name;
@@ -125,6 +130,7 @@ class FileList extends React.Component {
         this.setState({menuOpen:open})
     }
     render(){
+
         return (<div><MaterialTable
             columns={[
                 { title: 'Name', field: 'name' },

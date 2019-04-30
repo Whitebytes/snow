@@ -14,10 +14,8 @@ import FaceIcon from '@material-ui/icons/Face';
 import Popper from '@material-ui/core/Popper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
-
-import { connect } from "react-redux";
-import { logon, loggedon, connected, logoff, loggedoff} from "../../redux/actions";
-
+import {currUser} from '../../data/Queries'
+import { Query } from 'react-apollo';
 
 const styles = theme => ({
     menuItem: {
@@ -53,29 +51,32 @@ class ProfileMenu extends React.Component {
       };
       logoff = ()=>{
         localStorage.setItem('token',null);
-        this.props.loggedoff();
-        
+        if (process.browser)
+          window.location.href='/'
       }
 
   render(){
-      const {classes, currUser} = this.props;
+      const {classes, } = this.props;
       const { anchorEl, open } = this.state;
-      let avatar = currUser? "/static/"+currUser.avatar : null
-    return (
-        
+      return <Query query={currUser}>{({data})=>{
+        let {currUser} = data;
+        if (!currUser)
+          return ''
+
+        return (
         <div>
             <Badge badgeContent={4}  id="Progress1" color="secondary"  >
-                <Avatar alt="U" src={avatar} onClick={this.handleClick}/>
+                <Avatar alt="U" src={`/static/${currUser.avatar}`} onClick={this.handleClick}/>
             </Badge>
 
-        <Popper open={open} anchorEl={anchorEl} transition disablePortal  placement="bottom-end" >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                    {...TransitionProps}
-                    id="menu-list-grow"
-                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                >
-                <Paper>
+            <Popper open={open} anchorEl={anchorEl} transition disablePortal  placement="bottom-end" >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                      {...TransitionProps}
+                      id="menu-list-grow"
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                  >
+                  <Paper>
                   <ClickAwayListener onClickAway={this.handleClose}>
                         <MenuList>
                         <MenuItem className={classes.menuItem}>
@@ -97,19 +98,11 @@ class ProfileMenu extends React.Component {
             )}
         </Popper>
       </div>
-    );
+     
+      );
+    }}</Query>
+      
   }
 }
 
-const mapStateToProps = state => {
-  return { 
-    logonState: state.logon.logonState,
-    currUser: state.logon.currUser
-  };
-};
-
-
-export default connect(
-  mapStateToProps,
-  {logon, loggedon, connected, logoff, loggedoff}
-)(withStyles(styles)(ProfileMenu));
+export default withStyles(styles)(ProfileMenu);

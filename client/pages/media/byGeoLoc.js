@@ -4,8 +4,6 @@ import AppFrame from '../../modules/components/AppFrame';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import PropTypes from 'prop-types';
 import GMap from '../../modules/media/GMap';
-import BuObjects from '../../data/BuObjects';
-import { connect } from "react-redux";
 import Button from '@material-ui/core/Button';
 
 import DialogActions from '@material-ui/core/DialogActions';
@@ -54,7 +52,7 @@ class Index extends React.Component {
   
     return (
       <AppFrame noBorder={true} popperContent={popperContent}>
-      <BuObjects query={query} objectName={objName}>
+      <Query query={query} objectName={objName}>
         <GMap
           bootstrapURLKeys={{key: 'AIzaSyDKzVON9dMEWaJqWw8ARIa9wM2gU465btk'}}
           markers={data.map((elem)=>{
@@ -67,25 +65,10 @@ class Index extends React.Component {
           })}
           {...rest} >
       </GMap>
-      </BuObjects>
+      </Query>
       </AppFrame>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return (state) => { 
-      if (state.buObjects[objName])
-        return {
-          loadState:state.buObjects[objName].state, 
-          data:state.buObjects[objName].records
-        }
-        return {data:[]}
-  };
-
-};
-
-
-export default connect(
-  mapStateToProps,
-)(Index);
+export default Index

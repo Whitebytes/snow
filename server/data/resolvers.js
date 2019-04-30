@@ -33,10 +33,10 @@ const resolvers = {
             }
       
             pubsub.publish(REQ_ACTION, {
+                receiver: args.receiver,
                 actionRequest:actReq
             });
-            
-            
+        
             return actReq;
         }
     },
@@ -45,12 +45,12 @@ const resolvers = {
             // Additional event labels can be passed to asyncIterator creation
             subscribe: withFilter(
                 () => pubsub.asyncIterator(REQ_ACTION),
-                ({actionRequest }, {topic, sender}, ctx) => {
+                ({actionRequest, receiver }, {topic, sender}, ctx) => {
                     let valid=true;
                     valid = valid && (!sender || sender==actionRequest.sender)
                     valid = valid && (!topic || topic===actionRequest.topic)
                     valid = valid && (ctx.user.id===actionRequest.userId)
-                    valid = valid && (!actionRequest.receiver || ctx.token.id===actionRequest.receiver)
+                    valid = valid && (!receiver || ctx.token.id===receiver)
                     return valid;
                 },
               )

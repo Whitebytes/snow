@@ -20,7 +20,7 @@ const wsLink = process.browser ? new WebSocketLink({ // if you instantiate in th
     options: {
       reconnect: true,
       connectionParams: ()=> ({
-        authorization: localStorage.getItem('token')
+        authorization: process.browser ? localStorage.getItem('token'):null
     })
     }
   }) : null;
@@ -37,7 +37,7 @@ const wsLink = process.browser ? new WebSocketLink({ // if you instantiate in th
   ) : httplink;
 
   const authLink = setContext((_, { headers }) => {
-    var token = localStorage.getItem('token')
+    var token = process.browser ? localStorage.getItem('token'):null
     return {
               headers: {
         ...headers,
@@ -65,6 +65,8 @@ export class ApolloClientWithMessageBus extends ApolloClient{
   }
   connectMB() {
     var me=this;
+    if (!process.browser)
+      return;
     this.subscribe({
         query: subscribe,
         variables:{topic: null, sender: null}
@@ -81,10 +83,17 @@ export class ApolloClientWithMessageBus extends ApolloClient{
     this.MBconnected=true;
   }
   listen (topic, sender, onMessage) {
-    this.listHandlers.push({topic, sender, onMessage});
+    let handler = {topic, sender, onMessage};
+    this.listHandlers.push(handler);
     if (!this.MBconnected){
       this.connectMB()
     }
+    let unsubscribe = ()=>{
+      var index = this.listHandlers.indexOf(handler);
+      if (index > -1) 
+        this.listHandlers.splice(index, 1);
+    }
+    return unsubscribe;
   }
   publish(payload){
     this.mutate({mutation: publish, variables: payload})

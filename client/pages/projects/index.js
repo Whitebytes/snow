@@ -2,51 +2,31 @@
 import React from 'react';
 import AppFrame from '../../modules/components/AppFrame';
 import ProjectCard from '../../modules/projects/ProjectCard';
-import BuObjects from '../../data/BuObjects';
-
-import { connect } from "react-redux";
-const query = `query{queryProjects(clause:"{}"){id,name,description,createdAt,
-  mapProps, img, userOwner{firstName, avatar}}}`
-
-
+import {projects} from '../../data/Queries'
+import {Query} from 'react-apollo'
 
 class index extends React.Component {
   static getInitialProps({query}) {
     return {query, ...this.props}
   }
-
-  getItems = ()=>{
-    if (this.props.query.url)
-      return <ProjectCard  url={this.props.query.url}></ProjectCard>
-    if (!this.props.data)
-      return null;
-    return this.props.data.slice(0,10).map((item)=>{
-      return (<ProjectCard key={item.id} project={item} url={item.img}></ProjectCard>);
-    })
-  }
+ 
   render() {
     return (
       <AppFrame>
-        <BuObjects query={query} objectName="queryProjects">
-         {this.getItems()}
-        </BuObjects>
+        <Query query={projects} >{({data, loading})=>{
+           if (loading) return "loading...";
+           if (this.props.query.url)
+            return <ProjectCard  url={this.props.query.url}></ProjectCard>
+          return data.queryProjects.slice(0,10).map((item)=>{
+            return (<ProjectCard key={item.id} project={item} url={item.img}></ProjectCard>);
+          })
+        }
+      }
+      </Query>
   
       </AppFrame>
     );
   }
 }
 
-const mapStateToProps = state => {
- return (state) => { 
-      if (state.buObjects.queryProjects)
-        return {
-          loadState:state.buObjects.queryProjects.state, 
-          data:state.buObjects.queryProjects.records
-        }
-        return {}
-  };
-};
-
-export default connect(mapStateToProps,
-null
-)(index);
+export default index
