@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 //**********core  */
-export const currMenu=gql`{currMenu @client, currModule @client, drawerOpen @client}`
+export const menuQuery=gql`{currModule @client, currMenu @client, drawerOpen @client}`
 export const currUser=gql('query{currUser{firstName, lastName, avatar}}')
 export const moduleList = gql`query {modules{id,name,icon,menuItems{name, icon, url}}}`
 export const subscribe = gql`subscription($topic: String, $sender: String)

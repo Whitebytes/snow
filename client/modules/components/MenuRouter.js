@@ -1,6 +1,6 @@
 import React from 'react';
 import Router from 'next/router'
-import {moduleList, currMenu} from "../../data/Queries";
+import {moduleList, menuQuery} from "../../data/Queries";
 import client from "../../data/ApiClient";
 
 class MenuRouter extends React.Component {
@@ -14,20 +14,27 @@ class MenuRouter extends React.Component {
                 let modules = data.modules;
                 const url = window.location.pathname
                 const urlParts = url.split('/');
-                const moduleName = '/'+ urlParts[1];
-                let curr = client.readQuery({query: currMenu})
+                let {currMenu,currModule, ...rest} = client.readQuery({query: menuQuery})
+                
+                let isRootItem = (urlParts.lenght==2);
+    
                 modules.map((module)=>{
                     module.menuItems.map((item)=>{
-         
-                        if (item.url.split('/').lenght==2)
+                        if (item.url.split('/').lenght==2){
                             module.mainItem = item;
+                            if (isRootItem){ 
+                                currMenu = item
+                                currModule=module
+                            }
+                        }
                         if (item.url===url){
-                            client.writeQuery({query:currMenu, data:{...curr, currModule:module, currMenu: item}})
-                        }else if(item.url.startsWith(moduleName)){
-                            client.writeQuery({ query:currMenu,data:{...curr,currModule: module, currMenu:null}})   
+                           currMenu = item; 
+                           currModule = module;
                         }
                     })
                 })
+                console.log(currMenu)
+                client.writeQuery({query:menuQuery, data:{ currMenu,currModule, ...rest}})
             })
     }
     

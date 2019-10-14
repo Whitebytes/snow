@@ -11,8 +11,8 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Link from "next/link"; 
-import { currMenu, moduleList, subscribe } from '../../data/Queries';
-import { Query } from 'react-apollo';
+
+import withCTX from '../../data/WithCTX.js';
 
 
 const styles = theme => ({
@@ -53,9 +53,10 @@ class ModuleMenu extends Component{
 
     render() {
       const {classes, modules, currMenu, currModule, drawerOpen} =  this.props
+      console.log(modules)
       if (!modules)
         return '';
-
+      
       return <div className={classes.root}>{
         modules.map((item)=>{
           let currActive =  (currModule && currModule.name === item.name);
@@ -94,34 +95,5 @@ class ModuleMenu extends Component{
        </div>
       }  
 }
-const ModuleMenuWithData =(WrappedComponent)=> {
-  return class extends Component{
 
-    render(){
-      return  <Query query={currMenu} >
-        {({  data: menuState }) =>  (
-          <Query query={moduleList}>
-            {({ data, subscribeToMore, refetch }) => 
-             <WrappedComponent 
-              {...data}
-              {...menuState}
-              subscribeToNewComments={() =>
-                subscribeToMore({
-                  document: subscribe,
-                  variables:{topic: 'clientConnect', sender: null},
-                  updateQuery: (prev, { subscriptionData }) => {
-                    refetch();
-                  
-                  }
-                })
-              }
-            ></WrappedComponent>
-            }
-            </Query>)
-        }
-      </Query>
-    }
-  }
-}
-
-export default ModuleMenuWithData(withStyles(styles)(ModuleMenu));
+export default withCTX(withStyles(styles)(ModuleMenu));
