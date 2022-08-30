@@ -20,7 +20,7 @@
     "jss": "latest",
     "material-table": "^1.32.0",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.23",
+    "moment-timezone": "^0.5.35",
     "next": "latest",
     "nprogress": "^0.2.0",
     "points-cluster": "^0.1.4",
